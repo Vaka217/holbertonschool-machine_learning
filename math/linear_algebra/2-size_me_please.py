@@ -4,10 +4,10 @@
 
 def matrix_shape(matrix):
     """Calculates the shape of a matrix"""
-    if matrix == []:
-        return
     shape = []
     while isinstance(matrix, list):
         shape.append(len(matrix))
+        if not matrix[0]:
+            return shape
         matrix = matrix[0]
     return shape
