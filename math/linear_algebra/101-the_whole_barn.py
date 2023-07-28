@@ -2,6 +2,7 @@
 """Write a function that adds two matrices"""
 matrix_shape = __import__('2-size_me_please').matrix_shape
 
+
 def add_matrices(mat1, mat2):
     """Adds two matrices"""
     shape1 = matrix_shape(mat1)
