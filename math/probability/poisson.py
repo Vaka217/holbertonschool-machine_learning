@@ -4,6 +4,7 @@
 
 e = 2.7182818285
 
+
 class Poisson:
     """Class Poisson"""
     def __init__(self, data=None, lambtha=1.):
@@ -26,7 +27,8 @@ class Poisson:
         if k < 0:
             return 0
         fact = 1
-        for i in range(1, k + 1): fact = fact * i
+        for i in range(1, k + 1):
+            fact = fact * i
         return (e ** -self.lambtha * self.lambtha ** k) / fact
 
     def cdf(self, k):
@@ -38,7 +40,7 @@ class Poisson:
         cdf = 0
         for i in range(0, k + 1):
             fact = 1
-            for j in range(1, i + 1): fact = fact * j
+            for j in range(1, i + 1):
+                fact = fact * j
             cdf += self.lambtha ** i / fact
         return cdf * e ** -self.lambtha
-        
