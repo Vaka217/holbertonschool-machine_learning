@@ -3,6 +3,7 @@
 
 
 class Binomial:
+    """ Class Binomial"""
     def __init__(self, data=None, n=1, p=0.5):
         """Class constructor"""
         if data is None:
@@ -17,9 +18,9 @@ class Binomial:
                 raise TypeError("data must be a list")
             elif len(data) < 2:
                 raise ValueError("data must contain multiple values")
-            mean = sum(data) / (len(data))
+            mean = sum(data) / len(data)
             sum_variance = [(x - mean)**2 for x in data]
-            variance = sum(sum_variance) / (len(data) - 1)
+            variance = sum(sum_variance) / (len(data))
             self.n = round(mean / (1 - (variance / mean)))
             self.p = mean / self.n
 
