@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Neural Network Module 7"""
 import numpy as np
 import matplotlib.pyplot as plt

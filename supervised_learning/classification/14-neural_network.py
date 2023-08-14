@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Neural Network Module 6"""
 import numpy as np
 

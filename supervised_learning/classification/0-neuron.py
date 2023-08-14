@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-"""Neuron Module 0"""
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Neuron Module 0"""
 import numpy as np
 
