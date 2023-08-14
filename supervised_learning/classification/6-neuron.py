@@ -52,7 +52,7 @@ class Neuron():
         m = Y.shape[1]
         dZ = A - Y
         db = 1 / m * np.sum(dZ)
-        dW = 1 / m * np.dot(dZ, X.T)
+        dW = np.dot(dZ, X.T)
         self.__W -= alpha * dW
         self.__b -= alpha * db
 
@@ -65,7 +65,7 @@ class Neuron():
         if not isinstance(alpha, float):
             raise TypeError("alpha must be a float")
         if alpha <= 0:
-            raise ValueError("alpha must be a positive float")
+            raise ValueError("alpha must be positive")
         for i in range(iterations):
             self.__A = self.forward_prop(X)
             self.gradient_descent(X, Y, self.A, alpha)
