@@ -95,7 +95,7 @@ class NeuralNetwork():
         if not isinstance(alpha, float):
             raise TypeError("alpha must be a float")
         if alpha <= 0:
-            raise ValueError("alpha must be a positive float")
+            raise ValueError("alpha must be positive")
         for i in range(iterations):
             self.__A1, self.__A2 = self.forward_prop(X)
             self.gradient_descent(X, Y, self.A1, self.A2, alpha)
