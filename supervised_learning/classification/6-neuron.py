@@ -47,7 +47,7 @@ class Neuron():
         C = self.cost(Y, A)
         return P, C
 
-    def gradient_descent(self, X, Y, A, alpha=0.5):
+    def gradient_descent(self, X, Y, A, alpha=0.05):
         """Gradient Descent"""
         m = Y.shape[1]
         dZ = A - Y
