@@ -9,4 +9,4 @@ def one_hot_encode(Y, classes):
             classes, int) or classes < 2 or classes < np.max(Y):
         return None
     return np.array([[1. if y == i else 0. for y in Y] for i in range(
-        classes)]).T
+        classes)])
