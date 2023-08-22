@@ -38,11 +38,11 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations,
                 x: X_valid, y: Y_valid})
 
             if i % 100 == 0 or i == 0 or i == iterations:
-                print("""After {} iterations:\n\tTraining Cost: {}\n
-                      \tTraining Accuracy: {}\n\tValidation Cost: {}\n
-                      \tValidation Accuracy: {}"""
-                      .format(i, train_loss, train_accuracy,
-                              valid_loss, valid_accuracy))
+                print("After {} iterations:".format(i))
+                print("\tTraining Cost: {}".format(train_loss))
+                print("\tTraining Accuracy: {}".format(train_accuracy))
+                print("\tValidation Cost: {}".format(valid_loss))
+                print("\tValidation Accuracy: {}".format(valid_accuracy))
 
                 if i < iterations:
                     sess.run(train_op, feed_dict={x: X_train, y: Y_train})
