@@ -24,12 +24,12 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations,
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
 
-        tf.add_to_collection("placeholders", x)
-        tf.add_to_collection("placeholders", y)
-        tf.add_to_collection("tensors", y_pred)
-        tf.add_to_collection("tensors", loss)
-        tf.add_to_collection("tensors", accuracy)
-        tf.add_to_collection("operations", train_op)
+        tf.add_to_collection("x", x)
+        tf.add_to_collection("y", y)
+        tf.add_to_collection("y_pred", y_pred)
+        tf.add_to_collection("loss", loss)
+        tf.add_to_collection("accuracy", accuracy)
+        tf.add_to_collection("train_op", train_op)
 
         for i in range(iterations + 1):
             train_loss, train_accuracy = sess.run([loss, accuracy], feed_dict={
