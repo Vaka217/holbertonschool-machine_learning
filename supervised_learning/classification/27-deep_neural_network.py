@@ -53,10 +53,10 @@ class DeepNeuralNetwork():
             Z = np.dot(self.weights["W{}".format(i)], self.cache["A{}".format(
                 i - 1)]) + self.weights["b{}".format(i)]
             self.cache["A{}".format(i)] = 1 / (1 + np.exp(-Z))
-        Z = np.dot(self.weights["W{}".format(i + 1)], self.cache["A{}".format(
-                i)]) + self.weights["b{}".format(i + 1)]
+        Z = np.dot(self.weights["W{}".format(self.L)], self.cache["A{}".format(
+                self.L - 1)]) + self.weights["b{}".format(self.L)]
         t = np.exp(Z)
-        self.cache["A{}".format(self.L)] = [ti / sum(t) for ti in t] 
+        self.cache["A{}".format(self.L)] = t / np.sum(t, axis=0)
         return self.cache["A{}".format(self.L)], self.cache
 
     def cost(self, Y, A):
@@ -67,9 +67,9 @@ class DeepNeuralNetwork():
     def evaluate(self, X, Y):
         """Evaluates the NN Predictions"""
         A, _ = self.forward_prop(X)
+        P = np.where(A == np.max(A, axis=0), 1, 0)
         C = self.cost(Y, A)
-        print(A)
-        return A, C
+        return P, C
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """Gradient Descent"""
