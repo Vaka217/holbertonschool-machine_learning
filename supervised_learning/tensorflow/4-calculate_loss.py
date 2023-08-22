@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Loss"""
+"""Loss Calculation"""
 import tensorflow as tf
 
 
