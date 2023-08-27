@@ -7,7 +7,7 @@ def evaluate(X, Y, save_path):
     """Evaluates the output of a neural network"""
     with tf.Session() as sess:
         new_saver = tf.train.import_meta_graph(save_path + ".meta")
-        new_saver.restore(sess, tf.train.latest_checkpoint('./'))
+        new_saver.restore(sess, save_path)
         y_pred = tf.get_collection("y_pred")[0]
         loss = tf.get_collection("loss")[0]
         accuracy = tf.get_collection("accuracy")[0]
