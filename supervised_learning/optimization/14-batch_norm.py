@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Batch Norm Layer with tf"""
-import numpy as np
 import tensorflow.compat.v1 as tf
 
 
