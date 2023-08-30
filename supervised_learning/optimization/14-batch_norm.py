@@ -17,9 +17,6 @@ def create_batch_norm_layer(prev, n, activation):
 
     m, v = tf.nn.moments(Z)
 
-    batch_norm = tf.nn.batch_normalization(prev, m, v, beta, gamma, 1e-8)
+    batch_norm = tf.nn.batch_normalization(Z, m, v, beta, gamma, 1e-8)
 
-    if activation is None:
-        return batch_norm
-
-    return activation(batch_norm)
+    return batch_norm
