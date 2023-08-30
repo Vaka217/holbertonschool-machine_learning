@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Batch Norm Layer with tf"""
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 
 def create_batch_norm_layer(prev, n, activation):
