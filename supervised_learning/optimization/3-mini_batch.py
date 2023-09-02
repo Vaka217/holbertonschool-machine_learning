@@ -43,14 +43,14 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
                 start = step * batch_size
                 end = start + batch_size if start + batch_size < m else m
 
-                X_batch = X_shuffle[start:end]
                 Y_batch = Y_shuffle[start:end]
+                X_batch = X_shuffle[start:end]
                 sess.run(train_op, feed_dict={x: X_batch, y: Y_batch})
 
-                if step != 0 and step % 100 == 0:
+                if step != 0 and (step + 1) % 100 == 0:
                     step_cost, step_accuracy = sess.run(
                         [loss, accuracy], feed_dict={x: X_batch, y: Y_batch})
-                    print(f"\tStep {step}:")
+                    print(f"\tStep {step + 1}:")
                     print(f"\t\tCost: {step_cost}")
                     print(f"\t\tAccuracy: {step_accuracy}")
 
