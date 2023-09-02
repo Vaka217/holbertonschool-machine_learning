@@ -31,6 +31,10 @@ def forward_prop(prev, layers, activations, epsilon):
 
         if activations[i] is not None:
             prev = activations[i](prev)
+    init = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
+    layer = tf.layers.Dense(layers[i + 1], activations[i + 1], kernel_initializer=init,
+                            name="layer")
+    return layer(prev)
 
 
 def shuffle_data(X, Y):
@@ -73,17 +77,14 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     # hint: not trainable
     global_step = tf.Variable(0, trainable=False)
 
-    # compute decay_steps
-    decay_step = decay_rate * 10
-
     # create "alpha" the learning rate decay operation in tensorflow
-    alpha = tf.train.inverse_time_decay(alpha, global_step, decay_step,
+    alpha = tf.train.inverse_time_decay(alpha, global_step, 1,
                                         decay_rate, staircase=True)
 
     # initizalize train_op and add it to collection
     # hint: don't forget to add global_step parameter in optimizer().minimize()
     optimizer = tf.train.AdamOptimizer(alpha, beta1, beta2, epsilon)
-    train_op = optimizer.minimize(loss, global_step)
+    train_op = optimizer.minimize(loss)
     tf.add_to_collection("train_op", train_op)
 
     init = tf.global_variables_initializer()
