@@ -31,10 +31,6 @@ def forward_prop(prev, layers, activations, epsilon):
 
         if activations[i] is not None:
             prev = activations[i](prev)
-    init = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
-    layer = tf.layers.Dense(layers[i + 1], activations[i + 1], kernel_initializer=init,
-                            name="layer")
-    return layer(prev)
 
 
 def shuffle_data(X, Y):
@@ -137,6 +133,9 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
                         print(f"\tStep {step + 1}:")
                         print(f"\t\tCost: {step_cost}")
                         print(f"\t\tAccuracy: {step_accuracy}")
+
+            # Update global step variable
+            sess.run(tf.assign_add(global_step, 1))
 
         # save and return the path to where the model was saved
         saver = tf.train.Saver()
