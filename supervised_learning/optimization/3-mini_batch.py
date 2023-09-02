@@ -20,7 +20,10 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
         y = tf.get_collection("y")[0]
 
         m = X_train.shape[0]
-        batches = m // batch_size
+        if m % batch_size == 0:
+            batches = m // batch_size
+        else:
+            batches = m // batch_size + 1
 
         for epoch in range(epochs + 1):
             print(f"After {epoch} epochs:")
@@ -50,7 +53,8 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
 
                     if step != 0 and (step + 1) % 100 == 0:
                         step_cost, step_accuracy = sess.run(
-                            [loss, accuracy], feed_dict={x: X_batch, y: Y_batch})
+                            [loss, accuracy],
+                            feed_dict={x: X_batch, y: Y_batch})
                         print(f"\tStep {step + 1}:")
                         print(f"\t\tCost: {step_cost}")
                         print(f"\t\tAccuracy: {step_accuracy}")
