@@ -29,8 +29,8 @@ def forward_prop(prev, layers, activations, epsilon):
         prev = tf.nn.batch_normalization(Z, mean=m, variance=v, offset=beta,
                                          scale=gamma, variance_epsilon=epsilon)
 
-        if activations is not None:
-            prev = activations(prev)
+        if activations[i] is not None:
+            prev = activations[i](prev)
 
 
 def shuffle_data(X, Y):
@@ -91,8 +91,12 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
         sess.run(init)
 
         m = X_train.shape[0]
+        if m % batch_size == 0:
+            batches = m // batch_size
+        else:
+            batches = m // batch_size + 1
 
-        for epoch in range(epochs):
+        for epoch in range(epochs + 1):
             # print training and validation cost and accuracy
             print(f"After {epoch} epochs:")
 
@@ -108,43 +112,30 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
             print(f"\tValidation Cost: {valid_cost}")
             print(f"\tValidation Accuracy: {valid_accuracy}")
 
-            # shuffle data
-            X_shuffle, Y_shuffle = shuffle_data(X_train, Y_train)
+            if epoch < epochs:
+                # shuffle data
+                X_shuffle, Y_shuffle = shuffle_data(X_train, Y_train)
 
-            for step in range(0, m, batch_size):
-                # get X_batch and Y_batch from X_train shuffled
-                # and Y_train shuffled
-                start = step * batch_size
-                end = start + batch_size if start + batch_size < m else m
+                for step in range(batches):
+                    # get X_batch and Y_batch from X_train shuffled
+                    # and Y_train shuffled
+                    start = step * batch_size
+                    end = start + batch_size if start + batch_size < m else m
 
-                X_batch = X_shuffle[start:end]
-                Y_batch = Y_shuffle[start:end]
+                    X_batch = X_shuffle[start:end]
+                    Y_batch = Y_shuffle[start:end]
 
-                # run training operation
-                sess.run(train_op, feed_dict={x: X_batch, y: Y_batch})
+                    # run training operation
+                    sess.run(train_op, feed_dict={x: X_batch, y: Y_batch})
 
-                # print batch cost and accuracy
-                if step != 0 and step % 100 == 0:
-                    step_cost, step_accuracy = sess.run(
-                        [loss, accuracy], feed_dict={x: X_batch, y: Y_batch})
-                    print(f"\tStep {step}:")
-                    print(f"\t\tCost: {step_cost}")
-                    print(f"\t\tAccuracy: {step_accuracy}")
-
-        # print training and validation cost and accuracy again
-        print(f"After {epoch} epochs:")
-
-        train_cost, train_accuracy = sess.run([loss, accuracy], feed_dict={
-            x: X_train, y: Y_train})
-
-        print(f"\tTraining Cost: {train_cost}")
-        print(f"\tTraining Accuracy: {train_accuracy}")
-
-        valid_cost, valid_accuracy = sess.run([loss, accuracy], feed_dict={
-            x: X_valid, y: Y_valid})
-
-        print(f"\tValidation Cost: {valid_cost}")
-        print(f"\tValidation Accuracy: {valid_accuracy}")
+                    # print batch cost and accuracy
+                    if step != 0 and (step + 1) % 100 == 0:
+                        step_cost, step_accuracy = sess.run(
+                            [loss, accuracy], feed_dict={
+                                x: X_batch, y: Y_batch})
+                        print(f"\tStep {step + 1}:")
+                        print(f"\t\tCost: {step_cost}")
+                        print(f"\t\tAccuracy: {step_accuracy}")
 
         # save and return the path to where the model was saved
         saver = tf.train.Saver()
