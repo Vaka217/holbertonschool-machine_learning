@@ -22,7 +22,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
         m = X_train.shape[0]
         batches = m // batch_size
 
-        for epoch in range(epochs + 1):
+        for epoch in range(epochs):
             print(f"After {epoch} epochs:")
 
             train_cost, train_accuracy = sess.run([loss, accuracy], feed_dict={
@@ -53,6 +53,20 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
                     print(f"\tStep {step}:")
                     print(f"\t\tCost: {step_cost}")
                     print(f"\t\tAccuracy: {step_accuracy}")
+
+        print(f"After {epoch + 1} epochs:")
+
+        train_cost, train_accuracy = sess.run([loss, accuracy], feed_dict={
+            x: X_train, y: Y_train})
+
+        print(f"\tTraining Cost: {train_cost}")
+        print(f"\tTraining Accuracy: {train_accuracy}")
+
+        valid_cost, valid_accuracy = sess.run([loss, accuracy], feed_dict={
+            x: X_valid, y: Y_valid})
+
+        print(f"\tValidation Cost: {valid_cost}")
+        print(f"\tValidation Accuracy: {valid_accuracy}")
 
         saver = tf.train.Saver()
         save_path = saver.save(sess, save_path)
