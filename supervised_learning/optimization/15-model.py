@@ -4,15 +4,14 @@ import tensorflow.compat.v1 as tf
 import numpy as np
 
 
-def forward_prop(prev, layers, activations, epsilon):
+def forward_prop(prev, layers, activations):
     """Forward Propagation with batch normalization"""
     # all layers get batch_normalization but the last one, that stays without
     # any activation or normalization
     for i in range(len(layers)):
         heetal = tf.keras.initializers.VarianceScaling(mode='fan_avg')
 
-        layer = tf.keras.layers.Dense(layers[i], activation=activations[i],
-                                      kernel_initializer=heetal)
+        layer = tf.layers.Dense(layers[i], kernel_initializer=heetal)
         Z = layer(prev)
 
         if i == len(layers) - 1:
@@ -27,7 +26,7 @@ def forward_prop(prev, layers, activations, epsilon):
         m, v = tf.nn.moments(Z, axes=[0])
 
         prev = tf.nn.batch_normalization(Z, mean=m, variance=v, offset=beta,
-                                         scale=gamma, variance_epsilon=epsilon)
+                                         scale=gamma, variance_epsilon=1e-8)
 
         if activations[i] is not None:
             prev = activations[i](prev)
@@ -56,7 +55,7 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     tf.add_to_collection("y", y)
 
     # initialize y_pred and add it to collection
-    y_pred = forward_prop(x, layers, activations, epsilon)
+    y_pred = forward_prop(x, layers, activations)
     tf.add_to_collection("y_pred", y_pred)
 
     # intialize loss and add it to collection
