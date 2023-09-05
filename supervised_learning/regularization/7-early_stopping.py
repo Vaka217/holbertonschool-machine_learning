@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Determines if you should stop gradient descent early"""
-import tensorflow.compat.v1 as tf
 
 
 def early_stopping(cost, opt_cost, threshold, patience, count):
