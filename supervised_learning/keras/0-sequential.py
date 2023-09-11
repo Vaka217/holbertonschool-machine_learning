@@ -20,12 +20,11 @@ def build_model(nx, layers, activations, lambtha, keep_prob):
     """
 
     model = K.Sequential()
-    for i in range(len(layers) - 1):
-        model.add(K.layers.Dropout(keep_prob, input_shape=(nx,)))
+    for i in range(len(layers)):
         model.add(K.layers.Dense(layers[i], activation=activations[i],
                                  kernel_regularizer=K.regularizers.L2(lambtha),
                                  input_shape=(nx,)))
-    model.add(K.layers.Dense(layers[i + 1], activation=activations[i + 1],
-                             kernel_regularizer=K.regularizers.L2(lambtha),
-                             input_shape=(nx,)))
+        if i != len(layers) - 1:
+            model.add(K.layers.Dropout(1 - keep_prob, input_shape=(nx,)))
+
     return model
