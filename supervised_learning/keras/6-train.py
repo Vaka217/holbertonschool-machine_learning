@@ -4,9 +4,10 @@ import tensorflow.keras as K
 
 
 def train_model(network, data, labels, batch_size, epochs,
-                validation_data=None, verbose=True, shuffle=False):
-    """Trains a model using mini-batch gradient descent and analyze validation
-    data
+                validation_data=None, early_stopping=False, patience=0,
+                verbose=True, shuffle=False):
+    """Trains a model using mini-batch gradient descent, analyze validation
+    data and uses early stopping
 
     Args:
         network (Model): the model to train
@@ -18,6 +19,9 @@ def train_model(network, data, labels, batch_size, epochs,
         gradient descent
         validation_data (tuple, optional): the data to validate the model.
         Defaults to None
+        early_stopping (bool, optional): indicates whether early stopping
+        should be used. Defaults to False
+        patience (int): the patience used for early stopping
         verbose (bool, optional): boolean that determines if output should be
         printed during training. Defaults to True.
         shuffle (bool, optional): boolean that determines whether to shuffle
@@ -28,5 +32,8 @@ def train_model(network, data, labels, batch_size, epochs,
         History: History object generated after training the model
     """
 
+    callback = K.callbacks.EarlyStopping(
+        patience=patience) if early_stopping and validation_data else None
     return network.fit(data, labels, batch_size, epochs, verbose,
-                       shuffle=shuffle, validation_data=validation_data)
+                       shuffle=shuffle, validation_data=validation_data,
+                       callbacks=[callback])
