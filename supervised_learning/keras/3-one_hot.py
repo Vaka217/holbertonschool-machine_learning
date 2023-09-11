@@ -7,10 +7,11 @@ def one_hot(labels, classes=None):
     """Converts a label vector into a one-hot matrix
 
     Args:
-        network (Model): model to optimize
-        alpha (float): learning rate
-        beta1 (float): first Adam optimization parameter
-        beta2 (float): second Adam optimization parameter
+        labels (numpy.ndarray): label vector
+        classes (int, optional): total number of classes. Defaults to None.
+
+    Returns:
+        one hot matrix
     """
 
     return K.utils.to_categorical(labels, num_classes=classes)
