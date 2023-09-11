@@ -18,4 +18,4 @@ def test_model(network, data, labels, verbose=True):
         respectively.
     """
 
-    return network.evaluate(data, labels, verbose=1)
+    return network.evaluate(data, labels, verbose=verbose)

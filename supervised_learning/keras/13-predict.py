@@ -17,4 +17,4 @@ def predict(network, data, verbose=False):
         np.ndarray: the prediction for the data.
     """
 
-    return network.predict(data, verbose=1)
+    return network.predict(data, verbose=verbose)
