@@ -32,8 +32,8 @@ def convolve_grayscale_same(images, kernel):
 
     output = np.zeros((m, h, w))
 
-    for i in range(outh):
-        for j in range(outw):
+    for i in range(h):
+        for j in range(w):
             image_section = images[:, i:i+kh, j:j+kw]
             output[:, i, j] = np.sum(image_section * kernel, axis=(1, 2))
 
