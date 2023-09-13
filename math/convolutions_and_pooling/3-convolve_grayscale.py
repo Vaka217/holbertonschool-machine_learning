@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Performs a valid convolution on grayscale images"""
 import numpy as np
-from math import ceil, floor
 
 
 def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
