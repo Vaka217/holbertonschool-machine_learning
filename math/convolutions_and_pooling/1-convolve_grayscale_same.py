@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Performs a valid convolution on grayscale images"""
 import numpy as np
-from math import ceil, floor
 
 
 def convolve_grayscale_same(images, kernel):
@@ -25,8 +24,8 @@ def convolve_grayscale_same(images, kernel):
 
     kh, kw = kernel.shape
 
-    ph = ceil(kh / 2 - 1)
-    pw = ceil(kw / 2 - 1)
+    ph = max(kh / 2 - 1, kh / 2)
+    pw = max(kw / 2 - 1, kw / 2)
 
     images = np.pad(images, [(0, 0), (ph, ph), (pw, pw)])
     m, h, w = images.shape
