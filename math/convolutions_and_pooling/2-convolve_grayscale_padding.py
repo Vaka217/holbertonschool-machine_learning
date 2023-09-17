@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Performs a valid convolution on grayscale images"""
+"""Performs a convolution on grayscale images with custom padding"""
 import numpy as np
 
 
 def convolve_grayscale_padding(images, kernel, padding):
-    """Performs a same convolution on grayscale images
+    """Performs a convolution on grayscale images with custom padding
 
     Args:
         images (numpy.ndarray): ndarray with shape (m, h, w) containing

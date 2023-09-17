@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Performs a valid convolution on grayscale images"""
+"""Performs a convolution on images using multiple kernels"""
 import numpy as np
 
 
 def convolve(images, kernels, padding='same', stride=(1, 1)):
-    """Performs a convolution on images with channels
+    """Performs a convolution on images using multiple kernels
 
     Args:
         images (numpy.ndarray): ndarray with shape (m, h, w, c) containing

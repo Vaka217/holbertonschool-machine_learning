@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Performs a valid convolution on grayscale images"""
+"""Performs a convolution on grayscale images"""
 import numpy as np
 
 
 def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
-    """Performs a same convolution on grayscale images
+    """Performs a convolution on grayscale images
 
     Args:
         images (numpy.ndarray): ndarray with shape (m, h, w) containing

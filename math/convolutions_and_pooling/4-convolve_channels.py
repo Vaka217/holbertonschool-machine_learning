@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Performs a valid convolution on grayscale images"""
+"""Performs a convolution on images with channels"""
 import numpy as np
 
 
