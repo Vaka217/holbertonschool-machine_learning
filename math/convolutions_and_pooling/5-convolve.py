@@ -3,7 +3,7 @@
 import numpy as np
 
 
-def convolve_channels(images, kernel, padding='same', stride=(1, 1)):
+def convolve(images, kernels, padding='same', stride=(1, 1)):
     """Performs a convolution on images with channels
 
     Args:
@@ -14,10 +14,11 @@ def convolve_channels(images, kernel, padding='same', stride=(1, 1)):
             - w is the width in pixels of the images
             - c is the number of channels in the image
 
-        kernel (numpy.ndarray): ndarray with shape (kh, kw, c) containing the
+        kernel (numpy.ndarray): ndarray with shape (kh, kw, c, nc) containing the
         kernel for the convolution.
             - kh is the height of the kernel
             - kw is the width of the kernel
+            - nc is the number of kernels
 
         padding (tuple/str): either a tuple of (ph, pw), ‘same’, or ‘valid’
             - ph is the padding for the height of the image
@@ -31,7 +32,7 @@ def convolve_channels(images, kernel, padding='same', stride=(1, 1)):
         numpy.ndarray: contains the convolved images
     """
 
-    kh, kw, _ = kernel.shape
+    kh, kw, _, nc = kernels.shape
     m, h, w, _ = images.shape
     sh, sw = stride
     ph, pw = 0, 0
@@ -48,11 +49,14 @@ def convolve_channels(images, kernel, padding='same', stride=(1, 1)):
     outh = ((h + (2 * ph) - kh) // sh) + 1
     outw = ((w + (2 * pw) - kw) // sw) + 1
 
-    output = np.zeros((m, outh, outw))
+    output = np.zeros((m, outh, outw, nc))
 
-    for i in range(outh):
-        for j in range(outw):
-            image_section = images[:, i*sh:i*sh+kh, j*sw:j*sw+kw]
-            output[:, i, j] = np.sum(image_section * kernel, axis=(1, 2, 3))
+    for k in range(nc):
+        kernel = kernels[:, :, :, k]
+        for i in range(outh):
+            for j in range(outw):
+                image_section = images[:, i*sh:i*sh+kh, j*sw:j*sw+kw]
+                output[:, i, j, k] = np.sum(image_section * kernel,
+                                            axis=(1, 2, 3))
 
     return output
