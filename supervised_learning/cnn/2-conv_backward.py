@@ -49,17 +49,17 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
         Shape: (1, 1, 1, c_new)
     """
 
-    _, h_prev, w_prev, _ = A_prev.shape
+    m, h_prev, w_prev, _ = A_prev.shape
     kh, kw, _, _ = W.shape
     sh, sw = stride
     ph, pw = 0, 0
+    _, h_new, w_new, c_new = dZ.shape
 
     if padding == 'same':
-        ph = ((h_prev - 1) * sh + kh - h_prev) // 2
-        pw = ((w_prev - 1) * sw + kw - w_prev) // 2
+        ph = int(np.ceil((h_prev * sh - h_new + kh - sh) / 2))
+        pw = int(np.ceil((w_prev * sw - w_new + kw - sw) / 2))
         A_prev = np.pad(A_prev, [(0, 0), (ph, ph), (pw, pw), (0, 0)])
 
-    m, nh, nw, c_new = dZ.shape
 
     dA_prev = np.zeros(A_prev.shape)
     dW = np.zeros(W.shape)
@@ -69,17 +69,18 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
         a_prev = A_prev[i]
         da_prev = np.zeros(a_prev.shape)
 
-        for h in range(nh):
-            for w in range(nw):
+        for h in range(h_new):
+            for w in range(w_new):
                 for c in range(c_new):
+                    print("W * dZ:", (W[:, :, :, c] * dZ[i, h, w, c]).shape)
+                    print("dA: ", da_prev[h*sh:h*sh+kh, w*sw:w*sw+kw].shape)
+                    print(i)
                     da_prev[h*sh:h*sh+kh, w*sw:w*sw+kw] += W[:, :, :, c] * dZ[
                         i, h, w, c]
                     dW[:, :, :, c] += a_prev[h*sh:h*sh+kh, w*sw:w*sw+kw] * dZ[
                         i, h, w, c]
                     db[:, :, :, c] += dZ[i, h, w, c]
 
-        if padding == 'same':
-            da_prev = da_prev[h*sh:h*sh+kh, w*sw:w*sw+kw]
         dA_prev[i, :, :, :] = da_prev
 
     return dA_prev, dW, db
