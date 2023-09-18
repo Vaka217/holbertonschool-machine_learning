@@ -60,7 +60,6 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
         pw = int(np.ceil((w_prev * sw - w_new + kw - sw) / 2))
         A_prev = np.pad(A_prev, [(0, 0), (ph, ph), (pw, pw), (0, 0)])
 
-
     dA_prev = np.zeros(A_prev.shape)
     dW = np.zeros(W.shape)
     db = np.zeros(b.shape)
@@ -72,9 +71,6 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
         for h in range(h_new):
             for w in range(w_new):
                 for c in range(c_new):
-                    print("W * dZ:", (W[:, :, :, c] * dZ[i, h, w, c]).shape)
-                    print("dA: ", da_prev[h*sh:h*sh+kh, w*sw:w*sw+kw].shape)
-                    print(i)
                     da_prev[h*sh:h*sh+kh, w*sw:w*sw+kw] += W[:, :, :, c] * dZ[
                         i, h, w, c]
                     dW[:, :, :, c] += a_prev[h*sh:h*sh+kh, w*sw:w*sw+kw] * dZ[
