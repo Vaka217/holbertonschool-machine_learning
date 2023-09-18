@@ -55,7 +55,8 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
         for i in range(nh):
             for j in range(nw):
                 image_section = A_prev[:, i*sh:i*sh+kh, j*sw:j*sw+kw]
-                output[:, i, j, channel] = np.sum(image_section * kernel)
+                output[:, i, j, channel] = np.sum(image_section * kernel,
+                                                  axis=(1, 2, 3))
     output += b
 
     return activation(output)
