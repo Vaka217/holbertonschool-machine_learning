@@ -1,24 +1,18 @@
 #!/usr/bin/env python3
-"""Builds a modified version of the LeNet-5 architecture."""
+"""Builds a modified version of the LeNet-5 architecture"""
 import tensorflow.keras as K
 
 
 def lenet5(X):
-    """Builds a modified version of the LeNet-5 architecture with tensorflow.
+    """Builds a modified version of the LeNet-5 architecture using keras.
 
     Args:
-        x (tf.placeholder): shape (m, 28, 28, 1) containing the input images
+        X (K.Input): shape (m, 28, 28, 1) containing the input images
         for the network.
 
-        y (tf.placeholder): shape (m, 10) containing the one-hot labels for the
-        network.
-
     Returns:
-        - a tensor for the softmax activated output.
-        - a training operation that utilizes Adam optimization
-        (with default hyperparameters).
-        - a tensor for the loss of the netowrk.
-        - a tensor for the accuracy of the network.
+        a K.Model compiled to use Adam optimization
+        (with default hyperparameters) and accuracy metrics.
     """
 
     model = K.Sequential()
