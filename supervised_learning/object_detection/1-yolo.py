@@ -73,8 +73,8 @@ class Yolo():
 
             b_x = (1 / (1 + np.exp(-t_x)) + c_x) / grid_width
             b_y = (1 / (1 + np.exp(-t_y)) + c_y) / grid_height
-            b_w = (np.exp(t_w) * p_w) / self.model.input.shape[1]
-            b_h = (np.exp(t_h) * p_h) / self.model.input.shape[2]
+            b_w = (np.exp(t_w) * p_w) / self.model.input.shape[1].value
+            b_h = (np.exp(t_h) * p_h) / self.model.input.shape[2].value
 
             box = np.empty((grid_height, grid_width, anchors_size, 4))
 
