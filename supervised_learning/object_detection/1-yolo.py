@@ -20,17 +20,76 @@ class Yolo():
         self.anchors = anchors
 
     def process_outputs(self, outputs, image_size):
-        box, boxes, box_confidences, box_class_probs = [], [], [], []
+        """outputs is a list of numpy.ndarrays containing the predictions from
+        the Darknet model for a single image:
+        Each output will have the shape
+        (grid_height, grid_width, anchor_boxes, 4 + 1 + classes)
+        grid_height & grid_width => the height and width of the grid used for
+        the output
+        anchor_boxes => the number of anchor boxes used
+        4 => (t_x, t_y, t_w, t_h)
+        1 => box_confidence
+        classes => class probabilities for all classes
+        image_size is a numpy.ndarray containing the image’s original size
+        [image_height, image_width]
+        Returns a tuple of (boxes, box_confidences, box_class_probs):
+        boxes: a list of numpy.ndarrays of shape
+        (grid_height, grid_width, anchor_boxes, 4) containing the processed
+        boundary boxes for each output, respectively:
+        4 => (x1, y1, x2, y2)
+        (x1, y1, x2, y2) should represent the boundary box relative to
+        original image
+        box_confidences: a list of numpy.ndarrays of shape
+        (grid_height, grid_width, anchor_boxes, 1) containing the box
+        confidences for each output, respectively
+        box_class_probs: a list of numpy.ndarrays of shape
+        (grid_height, grid_width, anchor_boxes, classes) containing the box’s
+        class probabilities for each output, respectively
+        """
+        boxes, box_confidences, box_class_probs = [], [], []
         image_height, image_width = image_size
-        print(image_height, image_width)
-        for output in outputs:
-            print(output.shape)
-            # box.append(output[:, :, :, 0] / image_width)
-            # box.append(output[:, :, :, 1] / image_height)
-            # box.append(output[:, :, :, 2] / image_width)
-            # box.append(output[:, :, :, 3] / image_height)
-            boxes.append(
-                (output[..., 0] * 2 + output[..., 2]) / (image_width * 2))
-            box_confidences.append(output[:, :, :, 4])
-            box_class_probs.append(output[:, :, :, 5:])
+        anchors_w = self.anchors[..., 0]
+        anchors_h = self.anchors[..., 1]
+
+        for i, output in enumerate(outputs):
+            grid_height, grid_width, anchors_size, _ = output.shape
+
+            t_x = output[..., 0]
+            t_y = output[..., 1]
+            t_w = output[..., 2]
+            t_h = output[..., 3]
+            box_confidence = output[..., 4]
+            classes = output[..., 5:]
+
+            p_h = np.tile(anchors_h[i], grid_height).reshape(
+                grid_height, 1, len(anchors_h[i]))
+            p_w = np.tile(anchors_w[i], grid_width).reshape(
+                grid_width, 1, len(anchors_w[i]))
+
+            c_x = np.tile(np.arange(grid_width), grid_width).reshape(
+                grid_width, grid_width, 1)
+            c_y = np.tile(np.arange(grid_height), grid_height).reshape(
+                grid_width, grid_width).T.reshape(
+                grid_height, grid_height, 1)
+
+            b_x = (1 / (1 + np.exp(-t_x)) + c_x) / grid_width
+            b_y = (1 / (1 + np.exp(-t_y)) + c_y) / grid_height
+            b_w = (np.exp(t_w) * p_w) / self.model.input.shape[1]
+            b_h = (np.exp(t_h) * p_h) / self.model.input.shape[2]
+
+            box = np.empty((grid_height, grid_width, anchors_size, 4))
+
+            box[..., 0] = (b_x - b_w / 2) * image_width
+            box[..., 1] = (b_y - b_h / 2) * image_height
+            box[..., 2] = (b_x + b_w / 2) * image_width
+            box[..., 3] = (b_y + b_h / 2) * image_height
+
+            boxes.append(box)
+
+            box_confidences.append((1 / (1 + np.exp(-box_confidence))
+                                    ).reshape(grid_width, grid_height,
+                                              anchors_size, 1))
+
+            box_class_probs.append(1 / (1 + np.exp(-classes)))
+
         return (boxes, box_confidences, box_class_probs)
