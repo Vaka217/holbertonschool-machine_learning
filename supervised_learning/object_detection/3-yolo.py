@@ -73,8 +73,8 @@ class Yolo():
 
             b_x = (1 / (1 + np.exp(-t_x)) + c_x) / grid_width
             b_y = (1 / (1 + np.exp(-t_y)) + c_y) / grid_height
-            b_w = (np.exp(t_w) * p_w) / self.model.input.shape[1].value
-            b_h = (np.exp(t_h) * p_h) / self.model.input.shape[2].value
+            b_w = (np.exp(t_w) * p_w) / self.model.input.shape[1]
+            b_h = (np.exp(t_h) * p_h) / self.model.input.shape[2]
 
             box = np.empty((grid_height, grid_width, anchors_size, 4))
 
@@ -150,11 +150,11 @@ class Yolo():
             """Finds the intersection over union between two boxes
             """
             xi_1 = max(box_1[0], box_2[0])
-            xi_2 = max(box_1[1], box_2[1])
-            yi_1 = max(box_1[2], box_2[2])
+            yi_1 = max(box_1[1], box_2[1])
+            xi_2 = max(box_1[2], box_2[2])
             yi_2 = max(box_1[3], box_2[3])
 
-            intersection = (yi_2 - yi_1) * (xi_2 - xi_1)
+            intersection = (xi_2 - xi_1) * (yi_2 - yi_1)
 
             box_1_area = (box_1[3] - box_1[1]) * (box_1[2] - box_1[0])
             box_2_area = (box_2[3] - box_2[1]) * (box_2[2] - box_2[0])
@@ -191,7 +191,7 @@ class Yolo():
             for j, filtered_box in enumerate(filtered_boxes_class):
                 iou = intersection_over_union(best_filtered_boxes[i],
                                               filtered_box)
-                if iou < self.nms_t:
+                if iou <= self.nms_t:
                     box_predictions.append(filtered_box)
                     predicted_box_classes.append(box_classes[i])
                     predicted_box_scores.append(box_scores[i][j])
