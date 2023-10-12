@@ -294,17 +294,18 @@ class Yolo():
                 box_classes[i]] + ' ' + "%.2f" % round(box_scores[i], 2)
             image = cv2.putText(image,
                                 text,
-                                (int(box[0]), int(box[1]) - 5),
+                                (int(box[0]), int(box[1]) + 15),
                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale=1, color=(0, 0, 255),
                                 thickness=1,
                                 lineType=cv2.LINE_AA)
-        # cv2.imshow(file_name, image)
-        # s = cv2.waitKey(115)
-        # if s != -1:
-        if os.path.isdir('detections') is False:
-            os.mkdir('detections')
-        cv2.imwrite('detections/' + file_name, image)
+        cv2.imshow(file_name, image)
+        s = cv2.waitKey(0)
+        cv2.destroyAllWindows()
+        if s == 115:
+            if os.path.isdir('detections') is False:
+                os.mkdir('detections')
+            cv2.imwrite('detections/' + file_name, image)
 
     def predict(self, folder_path):
         """folder_path: a string representing the path to the folder holding
