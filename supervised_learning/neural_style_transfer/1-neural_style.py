@@ -111,8 +111,10 @@ class NST:
 
         base_model = tf.keras.applications.VGG19()
 
-        outputs = [base_model.get_layer(l
-                                        ).output for l in self.style_layers]
+        outputs = [base_model.get_layer(lyr
+                                        ).output for lyr in self.style_layers]
         outputs.append(base_model.get_layer(self.content_layer).output)
         model = tf.keras.Model(base_model.inputs, outputs)
+
+        self.model = model
         return model
