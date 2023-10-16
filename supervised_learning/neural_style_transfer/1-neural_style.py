@@ -2,7 +2,6 @@
 """Neural Style Transfer Module"""
 import numpy as np
 import tensorflow as tf
-import tensorflow.keras as K
 
 
 class NST:
@@ -81,8 +80,6 @@ class NST:
         range [0, 255] to [0, 1].
         Returns: the scaled
         """
-        if isinstance(image, np.ndarray):
-            print(image.shape)
         if not isinstance(image, np.ndarray
                           ) or len(image.shape) != 3 or image.shape[2] != 3:
             raise TypeError(
@@ -112,10 +109,10 @@ class NST:
         VGG19 layers listed in style_layers followed by content _layer
         saves the model in the instance attribute model"""
 
-        base_model = K.applications.VGG19()
+        base_model = tf.keras.applications.VGG19()
 
         outputs = [base_model.get_layer(l
                                         ).output for l in self.style_layers]
         outputs.append(base_model.get_layer(self.content_layer).output)
-        model = K.Model(base_model.inputs, outputs)
+        model = tf.keras.Model(base_model.inputs, outputs)
         return model
