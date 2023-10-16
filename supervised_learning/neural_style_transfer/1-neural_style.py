@@ -108,8 +108,12 @@ class NST:
         the model’s output should be a list containing the outputs of the
         VGG19 layers listed in style_layers followed by content _layer
         saves the model in the instance attribute model"""
-
         base_model = tf.keras.applications.VGG19()
+
+        custom_objects = {'MaxPooling2D': tf.keras.layers.AveragePooling2D}
+        base_model.save('base_model')
+        base_model = tf.keras.models.load_model('base_model',
+                                                custom_objects=custom_objects)
 
         outputs = [base_model.get_layer(lyr
                                         ).output for lyr in self.style_layers]
