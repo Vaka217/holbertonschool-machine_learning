@@ -50,11 +50,10 @@ class NST:
                                    ) != 3 or content_image.shape[2] != 3:
             raise TypeError(
                 "content_image must be a numpy.ndarray with shape (h, w, 3)")
-        if not isinstance(alpha, float) and not isinstance(beta, int
-                                                           ) or alpha < 0:
+        if not (isinstance(alpha, int) or isinstance(alpha, float
+                                                     )) or alpha < 0:
             raise TypeError("alpha must be a non-negative number")
-        if not isinstance(beta, float) and not isinstance(beta, int
-                                                          ) or beta < 0:
+        if not (isinstance(beta, int) or isinstance(beta, float)) or beta < 0:
             raise TypeError("beta must be a non-negative number")
 
         self.style_image = self.scale_image(style_image)
@@ -79,6 +78,8 @@ class NST:
         range [0, 255] to [0, 1].
         Returns: the scaled
         """
+        if isinstance(image, np.ndarray):
+            print(image.shape)
         if not isinstance(image, np.ndarray
                           ) or len(image.shape) != 3 or image.shape[2] != 3:
             raise TypeError(
