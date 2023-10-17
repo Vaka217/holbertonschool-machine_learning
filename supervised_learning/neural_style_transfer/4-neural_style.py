@@ -196,13 +196,12 @@ class NST:
                            ) or isinstance(gram_target, tf.Tensor)
                 ) or gram_target.shape != (1, c, c):
             raise TypeError(
-                "gram_target must be a tensor of shape [1, {c}, {c}]")
+                f"gram_target must be a tensor of shape [1, {c}, {c}]")
 
         gram_style = self.gram_matrix(style_output)
 
-        style_loss_layer = 1 / (4 * c ** 2 * (h * w) **
-                                2) * tf.math.reduce_sum(
-                                    tf.square(
-                                        tf.subtract(gram_target, gram_style)))
+        style_loss_layer = (1 / (c ** 2)) * (tf.math.reduce_sum(
+            tf.square(
+                tf.subtract(gram_target, gram_style))))
 
         return style_loss_layer
