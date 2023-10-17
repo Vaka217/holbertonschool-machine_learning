@@ -314,3 +314,17 @@ class NST:
         grad = tape.gradient(J_total, generated_image)
 
         return (grad, J_total, J_content, J_style)
+
+    def generate_image(self, iterations=1000, step=None, lr=0.01, beta1=0.9, beta2=0.99):
+        opt = tf.keras.optimizers.Adam(
+            learning_rate=lr, beta_1=beta1, epsilon=beta2)
+        generated_image = tf.Variable(self.content_image)
+        for i in range(0, iterations + 1):
+            grad, J_total, J_content, J_style = self.compute_grads(
+                generated_image)
+            opt.apply_gradients([(grad, generated_image)])
+            if i % step == 0:
+                print(
+                    f"Cost at iteration {i}: {J_total}, content {J_content}, style {J_style}")
+
+        return generated_image, J_total
