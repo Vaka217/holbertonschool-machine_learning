@@ -134,16 +134,14 @@ class NST:
         of rank 4
         Returns: a tf.Tensor of shape (1, c, c) containing the gram matrix of
         input_layer"""
-        if not (isinstance(input_layer, tf.Variable) or isinstance(input_layer, tf.Tensor)) or len(input_layer.shape) != 4:
+        if not (isinstance(input_layer, tf.Variable
+                           ) or isinstance(input_layer, tf.Tensor)
+                ) or len(input_layer.shape) != 4:
             raise TypeError("input_layer must be a tensor of rank 4")
 
-        _, height, width, channels = input_layer.shape
-        sub_gram, gram = [], []
-        for c in range(channels):
-            for i in range(height):
-                for j in range(width):
-                    print(input_layer[0, 0, 1])
-                    sub_gram += input_layer[i, j, c] + input_layer[i, j, c]
-                gram += sub_gram
-                    
-        return gram
+        result = tf.linalg.einsum('bijc,bijd->bcd', input_layer, input_layer)
+
+        input_shape = tf.shape(input_layer)
+        num_locations = tf.cast(input_shape[1] * input_shape[2], tf.float32)
+
+        return result / num_locations
