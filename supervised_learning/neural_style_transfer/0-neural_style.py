@@ -78,8 +78,6 @@ class NST:
         range [0, 255] to [0, 1].
         Returns: the scaled
         """
-        if isinstance(image, np.ndarray):
-            print(image.shape)
         if not isinstance(image, np.ndarray
                           ) or len(image.shape) != 3 or image.shape[2] != 3:
             raise TypeError(
