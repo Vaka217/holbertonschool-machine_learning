@@ -273,11 +273,11 @@ class NST:
                            ) or isinstance(generated_image, tf.Tensor)
                 ) or generated_image.shape != content_shape:
             raise TypeError(
-                f"content_output must be a tensor of shape {content_shape}")
+                f"generated_image must be a tensor of shape {content_shape}")
 
-        vgg19 = tf.keras.applications.vgg19
-        preprocecced = vgg19.preprocess_input(generated_image * 255)
-        outputs = self.model(preprocecced)
+        preprocessed = tf.keras.applications.vgg19.preprocess_input(
+            generated_image * 255)
+        outputs = self.model(preprocessed)
         content_output = outputs[-1]
         style_outputs = outputs[:-1]
 
@@ -306,10 +306,13 @@ class NST:
                            ) or isinstance(generated_image, tf.Tensor)
                 ) or generated_image.shape != content_shape:
             raise TypeError(
-                f"content_output must be a tensor of shape {content_shape}")
+                f"generated_image must be a tensor of shape {content_shape}")
+
+        if not isinstance(generated_image, tf.Variable):
+            generated_image = tf.Variable(generated_image)
 
         with tf.GradientTape() as tape:
             J_total, J_content, J_style = self.total_cost(generated_image)
         grad = tape.gradient(J_total, generated_image)
 
-        return grad, J_total, J_content, J_style
+        return (grad, J_total, J_content, J_style)
