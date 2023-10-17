@@ -64,12 +64,10 @@ class NST:
         self.content_image = self.scale_image(content_image)
         self.alpha = alpha
         self.beta = beta
-        self.model = self.load_model()
 
-        self.gram_style_features = [self.gram_matrix(
-            style_layer) for style_layer in self.model(self.style_image)]
+        self.load_model()
 
-        self.content_feature = self.model(self.content_image)
+        self.generate_features()
 
     @staticmethod
     def scale_image(image):
@@ -130,7 +128,6 @@ class NST:
         model = tf.keras.Model(base_model.inputs, outputs)
 
         self.model = model
-        return model
 
     @staticmethod
     def gram_matrix(input_layer):
@@ -153,3 +150,22 @@ class NST:
         num_locations = tf.cast(input_shape[1] * input_shape[2], tf.float32)
 
         return result / num_locations
+
+    def generate_features(self):
+        """Extracts the features used to calculate neural style cost
+        Sets the public instance attributes:
+        gram_style_features - a list of gram matrices calculated from the style
+        layer outputs of the style image
+        content_feature - the content layer output of the content image
+        """
+        style_inputs = tf.keras.applications.vgg19.preprocess_input(
+            self.style_image * 255.0)
+        content_inputs = tf.keras.applications.vgg19.preprocess_input(
+            self.content_image * 255.0)
+
+        style_outputs = self.model(style_inputs)
+        content_outputs = self.model(content_inputs)
+
+        self.gram_style_features = [self.gram_matrix(
+            style_layer) for style_layer in style_outputs[:-1]]
+        self.content_feature = content_outputs[-1]
