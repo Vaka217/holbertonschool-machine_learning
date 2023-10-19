@@ -300,19 +300,94 @@ class NST:
         return (grad, J_total, J_content, J_style)
 
     def generate_image(self, iterations=1000, step=None, lr=0.01, beta1=0.9, beta2=0.99):
+        """iterations - the number of iterations to perform gradient descent
+        over
+        step - if not None, the step at which you should print information
+        about the training, including the final iteration:
+        print Cost at iteration {i}: {J_total}, content {J_content},
+        style {J_style}
+        i is the iteration
+        J_total is the total cost
+        J_content is the content cost
+        J_style is the style cost
+        lr - the learning rate for gradient descent
+        beta1 - the beta1 parameter for gradient descent
+        beta2 - the beta2 parameter for gradient descent
+        if iterations is not an integer, raise a TypeError with the message
+        iterations must be an integer
+        if iterations is not positive, raise a ValueError with the message
+        iterations must be positive
+        if step is not None and not an integer, raise a TypeError with the
+        message step must be an integer
+        if step is not None and not positive or less than iterations , raise a
+        ValueError with the message step must be positive and less than
+        iterations
+        if lr is not a float or an integer, raise a TypeError with the message
+        lr must be a number
+        if lr is not positive, raise a ValueError with the message lr must be
+        positive
+        if beta1 is not a float, raise a TypeError with the message beta1 must
+        be a float
+        if beta1 is not in the range [0, 1], raise a ValueError with the
+        message beta1 must be in the range [0, 1]
+        if beta2 is not a float, raise a TypeError with the message beta2 must
+        be a float
+        if beta2 is not in the range [0, 1], raise a ValueError with the
+        message beta2 must be in the range [0, 1]
+        gradient descent should be performed using Adam optimization
+        the generated image should be initialized as the content image
+        keep track of the best cost and the image associated with that cost
+        Returns: generated_image, cost
+        generated_image is the best generated image
+        cost is the best cost
+        """
+        if not isinstance(iterations, int):
+            raise TypeError("iterations must be an integer")
+        if iterations <= 0:
+            raise ValueError("iterations must be positive")
+
+        if step is not None:
+            if not isinstance(step, int):
+                raise TypeError("step must be an integer")
+            if step <= 0 or step >= iterations:
+                raise ValueError(
+                    "step must be positive and less than iterations")
+
+        if not (isinstance(lr, float) or isinstance(lr, int)):
+            raise TypeError("lr must be a number")
+        if lr <= 0:
+            raise ValueError("lr must be positive")
+
+        if not isinstance(beta1, float):
+            raise TypeError("beta1 must be a float")
+        if not 0 <= beta1 <= 1:
+            raise ValueError("beta1 must be in the range [0, 1]")
+
+        if not isinstance(beta2, float):
+            raise TypeError("beta2 must be a float")
+        if not 0 <= beta2 <= 1:
+            raise ValueError("beta2 must be in the range [0, 1]")
+
         opt = tf.keras.optimizers.Adam(
             learning_rate=lr, beta_1=beta1, beta_2=beta2)
         generated_image = tf.Variable(self.content_image)
+        best_cost = float('inf')
+        best_image = None
+
         for i in range(iterations + 1):
             grad, J_total, J_content, J_style = self.compute_grads(
                 generated_image)
-            if i % step == 0 or i == iterations:
+            if step is not None and (i % step == 0 or i == iterations):
                 print(
                     f"Cost at iteration {i}: {J_total}, content {J_content}, style {J_style}")
+
+            if J_total < best_cost:
+                best_cost = J_total
+                best_image = generated_image.numpy()
 
             if i != iterations:
                 opt.apply_gradients([(grad, generated_image)])
                 clip_image = tf.clip_by_value(generated_image, 0.0, 1.0)
                 generated_image.assign(clip_image)
 
-        return generated_image[0].numpy(), J_total.numpy()
+        return best_image, best_cost
