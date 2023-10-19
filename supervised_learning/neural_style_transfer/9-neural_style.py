@@ -383,12 +383,12 @@ class NST:
                     f"Cost at iteration {i}: {J_total}, content {J_content}, style {J_style}")
 
             if J_total < best_cost:
-                best_cost = J_total
-                best_image = generated_image
+                best_cost = J_total.numpy()
+                best_image = generated_image.numpy()
 
             if i != iterations:
                 opt.apply_gradients([(grad, generated_image)])
                 clip_image = tf.clip_by_value(generated_image, 0.0, 1.0)
                 generated_image.assign(clip_image)
 
-        return best_image.numpy(), best_cost.numpy()
+        return best_image, best_cost
