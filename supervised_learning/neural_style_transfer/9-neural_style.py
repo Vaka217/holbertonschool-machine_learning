@@ -299,7 +299,8 @@ class NST:
 
         return (grad, J_total, J_content, J_style)
 
-    def generate_image(self, iterations=1000, step=None, lr=0.01, beta1=0.9, beta2=0.99):
+    def generate_image(self, iterations=1000, step=None, lr=0.01, beta1=0.9,
+                       beta2=0.99):
         """iterations - the number of iterations to perform gradient descent
         over
         step - if not None, the step at which you should print information
@@ -383,11 +384,11 @@ class NST:
 
             if J_total < best_cost:
                 best_cost = J_total
-                best_image = generated_image.numpy()
+                best_image = generated_image
 
             if i != iterations:
                 opt.apply_gradients([(grad, generated_image)])
                 clip_image = tf.clip_by_value(generated_image, 0.0, 1.0)
                 generated_image.assign(clip_image)
 
-        return best_image, best_cost
+        return best_image.numpy(), best_cost.numpy()
