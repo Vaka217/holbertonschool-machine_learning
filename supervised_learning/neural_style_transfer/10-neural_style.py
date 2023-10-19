@@ -394,10 +394,9 @@ class NST:
                 best_cost = J_total.numpy()
                 best_image = generated_image.numpy()
 
-            if i != iterations:
-                opt.apply_gradients([(grad, generated_image)])
-                clip_image = tf.clip_by_value(generated_image, 0.0, 1.0)
-                generated_image.assign(clip_image)
+            opt.apply_gradients([(grad, generated_image)])
+            clip_image = tf.clip_by_value(generated_image, 0.0, 1.0)
+            generated_image.assign(clip_image)
 
         return best_image, best_cost
 
@@ -408,4 +407,7 @@ class NST:
         generated image
         Returns: the variational cost
         """
+        # print(type(generated_image))
+        # if not isinstance(generated_image, (tf.Tensor, tf.Variable)) or generated_image.shape != 4 or generated_image.shape != 3:
+        #     raise TypeError("image must be a tensor of rank 3 or 4")
         return tf.image.total_variation(generated_image)[0]
