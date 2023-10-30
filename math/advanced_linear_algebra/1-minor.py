@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""Minor Module"""
+determinant = __import__('0-determinant').determinant
+
+
+def minor(matrix, det=[]):
+    """Calculates the determinant of a matrix
+
+    Args:
+        matrix: list of lists whose determinant should be calculated
+
+    Returns:
+        The determinant of matrix
+    """
+
+    if not matrix or not isinstance(matrix, list):
+        raise TypeError("matrix must be a list of lists")
+    if not matrix[0] or not all(isinstance(row, list) for row in matrix):
+        raise TypeError("matrix must be a list of lists")
+
+    if not all(len(matrix) == len(row) for row in matrix):
+        raise ValueError("matrix must be a square matrix")
+
+    if len(matrix) == 1:
+        return [[1]]
+
+    if len(matrix) == 2:
+        return [[matrix[1][1], matrix[1][0]], [matrix[0][1], matrix[0][0]]]
+
+    det = []
+    for i in range(len(matrix)):
+        sub_det = []
+        for j in range(len(matrix[0])):
+            matrix_cp = [[cell for cell in row] for row in matrix]
+            del matrix_cp[i]
+            del matrix_cp[0][j]
+            del matrix_cp[1][j]
+            sub_det.append(determinant(matrix_cp))
+            print(j, sub_det)
+        det.append(sub_det)
+
+    return det
