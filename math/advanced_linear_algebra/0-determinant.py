@@ -2,7 +2,7 @@
 """Determinant Module"""
 
 
-def determinant(matrix):
+def determinant(matrix, det=0):
     """Calculates the determinant of a matrix
 
     Args:
@@ -14,31 +14,28 @@ def determinant(matrix):
     if matrix == [[]]:
         return 1
 
-    if not matrix or not isinstance(matrix, list) or not matrix[0] or not isinstance(matrix[0], list):
+    if not matrix or not isinstance(matrix, list):
+        raise TypeError("matrix must be a list of lists")
+    if not matrix[0] or not all(isinstance(row, list) for row in matrix):
         raise TypeError("matrix must be a list of lists")
 
-    if len(matrix) != len(matrix[0]):
+    if not all(len(matrix) == len(row) for row in matrix):
         raise ValueError("matrix must be a square matrix")
 
     if len(matrix) == 1:
         return matrix[0][0]
 
-    dim_mat = len(matrix) - 1
-    det_mats = [matrix]
-    coef = [1]
-    det = 0
-    for i in range(dim_mat, 0, -1):
-        if i == 1:
-            for z, det_mat in enumerate(det_mats):
-                if z % 2 != 0:
-                    det -= coef[z] * (det_mat[0][0] * det_mat[1][1] - det_mat[0][1] * det_mat[1][0])
-                else:
-                    det += coef[z] * (det_mat[0][0] * det_mat[1][1] - det_mat[0][1] * det_mat[1][0])
-        else:
-            coef = []
-            det_mats = []
-            for j in range(i + 1):
-                coef.append(matrix[0][j])
-                det_mats.append([mat[:j] + mat[j + 1:] for mat in matrix[1:]])
+    if len(matrix) == 2:
+        return matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1]
+
+    for i in range(len(matrix)):
+        matrix_cp = matrix.copy()
+        matrix_cp = matrix_cp[1:]
+
+        for j in range(len(matrix_cp)):
+            matrix_cp[j] = matrix_cp[j][0:i] + matrix_cp[j][i+1:]
+        cofactor = (-1) ** i
+        sub_det = determinant(matrix_cp)
+        det += cofactor * matrix[0][i] * sub_det
 
     return det
