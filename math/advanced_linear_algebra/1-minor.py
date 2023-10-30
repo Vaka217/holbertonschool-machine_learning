@@ -3,7 +3,7 @@
 determinant = __import__('0-determinant').determinant
 
 
-def minor(matrix, det=[]):
+def minor(matrix):
     """Calculates the determinant of a matrix
 
     Args:
