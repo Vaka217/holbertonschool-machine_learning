@@ -13,12 +13,12 @@ def minor(matrix, det=[]):
         The determinant of matrix
     """
 
-    if not matrix or not isinstance(matrix, list):
+    if not isinstance(matrix, list):
         raise TypeError("matrix must be a list of lists")
-    if not matrix[0] or not all(isinstance(row, list) for row in matrix):
+    if not all(isinstance(row, list) for row in matrix):
         raise TypeError("matrix must be a list of lists")
 
-    if not all(len(matrix) == len(row) for row in matrix):
+    if not matrix or not all(len(matrix) == len(row) for row in matrix):
         raise ValueError("matrix must be a square matrix")
 
     if len(matrix) == 1:
@@ -33,10 +33,9 @@ def minor(matrix, det=[]):
         for j in range(len(matrix[0])):
             matrix_cp = [[cell for cell in row] for row in matrix]
             del matrix_cp[i]
-            del matrix_cp[0][j]
-            del matrix_cp[1][j]
+            for z in range(len(matrix_cp)):
+                del matrix_cp[z][j]
             sub_det.append(determinant(matrix_cp))
-            print(j, sub_det)
         det.append(sub_det)
 
     return det
