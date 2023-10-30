@@ -4,13 +4,13 @@ determinant = __import__('0-determinant').determinant
 
 
 def minor(matrix):
-    """Calculates the determinant of a matrix
+    """Calculates the minor matrix of a matrix
 
     Args:
         matrix: list of lists whose determinant should be calculated
 
     Returns:
-        The determinant of matrix
+        The minor matrix of matrix
     """
 
     if not isinstance(matrix, list):
