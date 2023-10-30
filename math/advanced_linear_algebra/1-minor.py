@@ -7,7 +7,7 @@ def minor(matrix):
     """Calculates the minor matrix of a matrix
 
     Args:
-        matrix: list of lists whose determinant should be calculated
+        matrix: list of lists whose minor matrix should be calculated
 
     Returns:
         The minor matrix of matrix
