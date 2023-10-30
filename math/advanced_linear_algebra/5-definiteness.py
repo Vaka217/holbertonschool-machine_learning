@@ -22,6 +22,8 @@ def definiteness(matrix):
 
     if matrix.shape[0] < 1 or not matrix.shape[0] == matrix.shape[1]:
         return None
+    if not (matrix == matrix.T).all():
+        return None
 
     eigenvalues = np.linalg.eigvals(matrix)
 
