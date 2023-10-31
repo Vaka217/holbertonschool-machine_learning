@@ -21,9 +21,9 @@ class MultiNormal:
 
     def __init__(self, data):
         if not isinstance(data, np.ndarray) or len(data.shape) != 2:
-            raise TypeError("X must be a 2D numpy.ndarray")
+            raise TypeError("data must be a 2D numpy.ndarray")
 
-        if data.shape[0] < 2:
-            raise ValueError("X must contain multiple data points")
+        if data.shape[1] < 2:
+            raise ValueError("data must contain multiple data points")
 
         self.mean, self.cov = mean_cov(data.T)

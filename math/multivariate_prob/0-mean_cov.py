@@ -28,4 +28,4 @@ def mean_cov(X):
     X_minus_mean = X - mean
     cov = np.dot(X_minus_mean.T, X_minus_mean) / (X.shape[0] - 1)
 
-    return mean.reshape(1, mean.shape[0]), cov
+    return np.reshape(mean, (mean.shape[0], 1)), cov
