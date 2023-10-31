@@ -45,7 +45,7 @@ class MultiNormal:
             raise TypeError("x must be a numpy.ndarray")
 
         if x.shape != (d, 1):
-            raise ValueError(f"x must have the shape ({d}, 1)")
+            raise ValueError("x must have the shape ({}, 1)".format(d))
 
         pdf = (1 / (((2 * np.math.pi)**(d/2)) *
                     (np.linalg.det(self.cov)**(1/2)))) * \
