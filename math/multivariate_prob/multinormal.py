@@ -39,7 +39,15 @@ class MultiNormal:
         have the shape ({d}, 1)
         Returns the value of the PDF
         """
-        pdf = (1 / (((2 * np.math.pi)**(len(x)/2)) *
+        d = len(self.mean)
+
+        if not isinstance(x, np.ndarray):
+            raise TypeError("x must be a numpy.ndarray")
+
+        if x.shape != (d, 1):
+            raise ValueError(f"x must have the shape ({d}, 1)")
+
+        pdf = (1 / (((2 * np.math.pi)**(d/2)) *
                     (np.linalg.det(self.cov)**(1/2)))) * \
             np.exp((-1/2) *
                    ((x-self.mean).T.dot(np.linalg.inv(self.cov
