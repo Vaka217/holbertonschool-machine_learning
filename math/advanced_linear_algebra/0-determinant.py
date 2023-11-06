@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Determinant Module"""
+"""Determinant Modul"""
 
 
 def determinant(matrix, det=0):
