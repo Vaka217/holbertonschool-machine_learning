@@ -44,7 +44,7 @@ def marginal(x, n, P, Pr):
     if not isinstance(P, np.ndarray) or len(P.shape) != 1:
         raise TypeError("P must be a 1D numpy.ndarray")
 
-    if not isinstance(P, np.ndarray) or P.shape != Pr.shape:
+    if not isinstance(Pr, np.ndarray) or Pr.shape != P.shape:
         raise TypeError("Pr must be a numpy.ndarray with the same shape as P")
 
     if not all(0 <= p <= 1 for p in P):
@@ -53,7 +53,7 @@ def marginal(x, n, P, Pr):
     if not all(0 <= pr <= 1 for pr in Pr):
         raise ValueError("All values in Pr must be in the range [0, 1]")
 
-    if np.sum(Pr) != 1:
+    if not np.isclose(np.sum(Pr), 1):
         raise ValueError("Pr must sum to 1")
 
     return np.sum(intersection(x, n, P, Pr))
