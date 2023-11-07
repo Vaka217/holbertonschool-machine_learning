@@ -24,7 +24,7 @@ def pca(X, var=0.95):
     sorted_eigen_vectors = eigen_vectors[:, i]
 
     cumsum = (np.cumsum(eigen_values[i] /
-              np.sum(eigen_values[i]))).round(decimals=2)
-    r = np.min(np.where(cumsum > var))
+              np.sum(eigen_values[i])))
+    r = np.min(np.where(cumsum >= var))
 
     return sorted_eigen_vectors[:, :r + 1]
