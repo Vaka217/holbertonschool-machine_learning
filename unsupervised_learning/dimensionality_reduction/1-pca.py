@@ -17,4 +17,4 @@ def pca(X, ndim):
 
     U, S, _ = np.linalg.svd(X_m)
 
-    return np.matmul(U[..., :ndim], np.diag(S[..., :ndim]))
+    return np.matmul(U[:, :ndim], np.diag(S[:ndim]))
