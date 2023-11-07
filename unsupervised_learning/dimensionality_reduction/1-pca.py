@@ -19,4 +19,4 @@ def pca(X, ndim):
 
     if ndim > S.shape[0]:
         ndim = S.shape[0]
-    return np.matmul(U[:, :ndim], np.diag(S))
+    return np.matmul(U[:, :ndim], np.diag(S[:ndim]))
