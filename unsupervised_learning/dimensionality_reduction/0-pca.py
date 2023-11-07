@@ -17,14 +17,13 @@ def pca(X, var=0.95):
     W is a numpy.ndarray of shape (d, nd) where nd is the new dimensionality of
     the transformed X
     """
-    cov = np.dot(X.T, X) / (X.shape[0] - 1)
-    eigen_values, eigen_vectors = np.linalg.eig(cov)
+    U, S, Vh = np.linalg.svd(X)
 
-    i = np.argsort(eigen_values, axis=0)[::-1]
-    sorted_eigen_vectors = eigen_vectors[:, i]
+    V = Vh.T
 
-    cumsum = (np.cumsum(eigen_values[i] /
-              np.sum(eigen_values[i])))
-    r = np.min(np.where(cumsum >= var))
+    cumsum = np.cumsum(S)
+    cumsum /= cumsum[-1]
 
-    return sorted_eigen_vectors[:, :r + 2] * -1
+    r = np.where(cumsum >= var)[0][0]
+
+    return V[:, :r + 1]
