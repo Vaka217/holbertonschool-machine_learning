@@ -23,5 +23,7 @@ def pca(X, var=0.95):
     i = np.argsort(eigen_values, axis=0)[::-1]
     sorted_eigen_vectors = eigen_vectors[:, i]
 
-    # cumsum = np.cumsum(eigen_values[i]) / np.sum(eigen_values[i])
-    return sorted_eigen_vectors[:, :2]
+    cumsum = np.cumsum(eigen_values[i]) / np.sum(eigen_values[i])
+    r = np.sum(np.where(cumsum <= var))
+    print(r)
+    return sorted_eigen_vectors[:, :r]
