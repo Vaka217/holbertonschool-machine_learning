@@ -15,8 +15,8 @@ def pca(X, ndim):
     """
     X_m = X - np.mean(X, axis=0)
 
-    U, S, _ = np.linalg.svd(X_m)
+    U, S, Vh = np.linalg.svd(X_m)
 
-    if ndim > S.shape[0]:
-        ndim = S.shape[0]
-    return np.matmul(U[:, :ndim], np.diag(S[:ndim]))
+    W = Vh.T[:, :ndim]
+
+    return X_m @ W
