@@ -83,6 +83,9 @@ def kmeans(X, k, iterations=1000):
         C[non_empty_clusters] = sum_cluster_points[non_empty_clusters] / \
             n_cluster_points[non_empty_clusters]
 
+        distances = np.linalg.norm(X[:, np.newaxis, :] - C, axis=-1)
+        clss = np.argmin(distances, axis=1)
+
         if np.array_equal(C, C_prev):
             return C, clss
 
