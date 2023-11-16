@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Performs K-means Module"""
 import numpy as np
-initialize = __import__('0-initialize').initialize
 
 
 def initialize(X, k):
