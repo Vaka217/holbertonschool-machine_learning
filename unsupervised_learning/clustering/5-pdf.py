@@ -34,11 +34,11 @@ def pdf(X, m, S):
             S.shape[0] != d or S.shape[1] != d:
         return None
 
-    P = np.ndarray.flatten((1 / (((2 * np.math.pi)**(d/2)) *
-                                 (np.linalg.det(S)**(1/2)))) *
-                           np.exp((-1/2) *
-                                  ((X-m).dot(np.linalg.inv(S))).dot((X-m).T)
-                                  ))
+    P = ((1 / (((2 * np.math.pi)**(d/2)) *
+               (np.linalg.det(S)**(1/2)))) *
+         np.exp((-1/2) *
+                ((X-m).dot(np.linalg.inv(S))).dot((X-m).T)
+                ))
 
     P = np.maximum(P, 1e-300)
-    return P
+    return P[range(len(P)), range(len(P))]
