@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Performs K-means Module"""
 import numpy as np
-import matplotlib.pyplot as plt
 initialize = __import__('0-initialize').initialize
 
 
@@ -27,27 +26,26 @@ def kmeans(X, k, iterations=1000):
     in C that each data point belongs to
     """
     C = initialize(X, k)
-    n, d = X.shape
 
     for _ in range(iterations):
         C_prev = np.copy(C)
-        G = np.zeros_like(C)
-        B = np.zeros((k, 1))
+        sum_cluster_points = np.zeros_like(C)
+        n_cluster_points = np.zeros((k, 1))
 
         distances = np.linalg.norm(X[:, np.newaxis, :] - C, axis=-1)
         clss = np.argmin(distances, axis=1)
 
-        print(clss)
         for i in range(k):
             cluster_points = X[clss == i]
             if len(cluster_points) == 0:
                 C[i] = initialize(X, 1)[0]
             else:
-                G[i] = np.sum(cluster_points, axis=0)
-                B[i] = cluster_points.shape[0]
+                sum_cluster_points[i] = np.sum(cluster_points, axis=0)
+                n_cluster_points[i] = cluster_points.shape[0]
 
-        non_empty_clusters = B.flatten() != 0
-        C[non_empty_clusters] = G[non_empty_clusters] / B[non_empty_clusters]
+        non_empty_clusters = n_cluster_points.flatten() != 0
+        C[non_empty_clusters] = sum_cluster_points[non_empty_clusters] / \
+            n_cluster_points[non_empty_clusters]
 
         if np.array_equal(C, C_prev):
             return C, clss
