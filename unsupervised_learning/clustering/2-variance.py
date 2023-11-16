@@ -14,6 +14,12 @@ def variance(X, C):
     var is the total variance
     """
 
+    if not isinstance(C, np.ndarray) or len(C.shape) != 2:
+        return None
+
+    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
+        return None
+
     distances = np.linalg.norm(X[:, np.newaxis, :] - C, axis=-1)
 
     clss = np.argmin(distances, axis=1)
