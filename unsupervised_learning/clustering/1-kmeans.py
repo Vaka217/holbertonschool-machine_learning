@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Performs K-means Module"""
 import numpy as np
+import matplotlib.pyplot as plt
 initialize = __import__('0-initialize').initialize
 
 
@@ -19,36 +20,36 @@ def kmeans(X, k, iterations=1000):
     (based on0-initialize.py)
     If a cluster contains no data points during the update step, reinitialize
     its centroid
-
     Returns: C, clss, or None, None on failure
-    C is a numpy.ndarray of shape (k, d) containing the centroid means for each cluster
-    clss is a numpy.ndarray of shape (n,) containing the index of the cluster in C that each data point belongs to
+    C is a numpy.ndarray of shape (k, d) containing the centroid means for each
+    cluster
+    clss is a numpy.ndarray of shape (n,) containing the index of the cluster
+    in C that each data point belongs to
     """
-
     C = initialize(X, k)
     n, d = X.shape
 
-    for i in range(iterations):
+    for _ in range(iterations):
         C_prev = np.copy(C)
+        G = np.zeros_like(C)
+        B = np.zeros((k, 1))
 
-        D = X - C[:, np.newaxis, np.newaxis]
-        print(D)
+        distances = np.linalg.norm(X[:, np.newaxis, :] - C, axis=-1)
+        clss = np.argmin(distances, axis=1)
 
-        # juan = np.array(D_all).argmin(axis=1)
+        print(clss)
+        for i in range(k):
+            cluster_points = X[clss == i]
+            if len(cluster_points) == 0:
+                C[i] = initialize(X, 1)[0]
+            else:
+                G[i] = np.sum(cluster_points, axis=0)
+                B[i] = cluster_points.shape[0]
 
-        # pedro = [0, 0, 0, 0, 0]
-        # centroids = np.zeros((k, d))
-        # for j in juan:
-        #     centroids[j] += X[j]
-        #     pedro[j] += 1
+        non_empty_clusters = B.flatten() != 0
+        C[non_empty_clusters] = G[non_empty_clusters] / B[non_empty_clusters]
 
-        # pedro = np.array(pedro)
-        # print(pedro)
-        # centroids = centroids.T / pedro
+        if np.array_equal(C, C_prev):
+            return C, clss
 
-        # if np.array_equal(centroids.T, centrods):
-        #     return centroids.T, 1
-
-        # centrods = centroids.T
-
-    return 0, 1
+    return C, clss
