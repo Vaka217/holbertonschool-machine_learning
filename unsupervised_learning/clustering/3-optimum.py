@@ -26,11 +26,11 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None, None
 
-    if kmax is not None and (not isinstance(kmax, int) or kmax >= 0):
+    if kmax is not None and (not isinstance(kmax, int) or kmax < 0):
         return None, None
 
-    if kmax is not None and (not isinstance(kmin, int) or
-                             kmin <= 0 or kmin >= kmax):
+    if not isinstance(kmin, int) or kmin <= 0 or kmax is not None \
+            and kmin >= kmax:
         return None, None
 
     if not isinstance(iterations, int) or iterations <= 0:
@@ -39,22 +39,19 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     results = []
     d_vars = []
 
-    C, clss = kmeans(X, 1, iterations)
+    C, clss = kmeans(X, kmin, iterations)
     results.append((C, clss))
     d_vars.append(0.0)
 
     small_var = variance(X, C)
+    kmin += 1
 
     if kmax is None:
-        kmax = 10000000
-    for k in range(kmin + 1, kmax + 1):
-        C, clss = kmeans(X, k, iterations)
+        kmax = 50
+    while kmin <= kmax:
+        C, clss = kmeans(X, kmin, iterations)
         d_vars.append(small_var - variance(X, C))
         results.append((C, clss))
-        if d_vars[-1] == d_vars[-2]:
-            C, clss = kmeans(X, k + 1, iterations)
-            d_vars.append(small_var - variance(X, C))
-            results.append((C, clss))
-            return results, d_vars
+        kmin += 1
 
     return results, d_vars
