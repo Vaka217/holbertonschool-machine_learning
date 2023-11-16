@@ -22,13 +22,7 @@ def initialize(X, k):
     centroids for each cluster, or None on failure
     """
 
-    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
-        return None
-
     _, d = X.shape
-
-    if not isinstance(k, int) or k <= 0:
-        return None
 
     centroids = np.random.uniform(low=np.min(
         X, axis=0), high=np.max(X, axis=0), size=(k, d))
@@ -57,6 +51,16 @@ def kmeans(X, k, iterations=1000):
     clss is a numpy.ndarray of shape (n,) containing the index of the cluster
     in C that each data point belongs to
     """
+
+    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
+        return None, None
+
+    if not isinstance(k, int) or k <= 0:
+        return None, None
+
+    if not isinstance(iterations, int) or iterations <= 0:
+        return None, None
+
     C = initialize(X, k)
 
     for _ in range(iterations):
