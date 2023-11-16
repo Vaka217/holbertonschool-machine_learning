@@ -37,10 +37,11 @@ def pdf(X, m, S):
     det_sqrt = np.linalg.det(S)**0.5
     inv_S = np.linalg.inv(S)
 
-    exponent = -0.5 * ((X - m).dot(inv_S)).dot((X - m).T)
+    diff = X - m
+    exponent = -0.5 * np.einsum('ij,ji->i', diff @ inv_S, diff.T)
 
     P = (1 / ((2 * np.math.pi)**(d/2) * det_sqrt)) * np.exp(exponent)
 
     P = np.maximum(P, 1e-300)
 
-    return P[range(len(P)), range(len(P))]
+    return P
