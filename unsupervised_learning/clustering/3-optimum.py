@@ -47,7 +47,7 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     kmin += 1
 
     if kmax is None:
-        kmax = 50
+        kmax = X.shape[0]
     while kmin <= kmax:
         C, clss = kmeans(X, kmin, iterations)
         d_vars.append(small_var - variance(X, C))
