@@ -49,4 +49,5 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
 
         prev_l = likelihood
 
+    print("Log Likelihood after {} iterations: {:.5f}".format(i, likelihood))
     return pi, m, S, g, likelihood
