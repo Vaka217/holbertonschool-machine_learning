@@ -28,9 +28,9 @@ def maximization(X, g):
     if not isinstance(g, np.ndarray) or len(g.shape) != 2:
         return None, None, None
 
-    k = g.shape[0]
+    k, n1 = g.shape
 
-    if k != n:
+    if n != n1 or np.abs(np.sum(g, axis=0) - 1).max() > 1e-10:
         return None, None, None
 
     S = np.zeros((k, d, d))
