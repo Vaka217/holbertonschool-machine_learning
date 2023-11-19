@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import numpy as np
 initialize = __import__('4-initialize').initialize
 
@@ -9,6 +10,7 @@ def maximization(X, g):
     g is a numpy.ndarray of shape (k, n) containing the posterior probabilities
     for each data point in each cluster
     You may use at most 1 loop
+
     Returns: pi, m, S, or None, None, None on failure
     pi is a numpy.ndarray of shape (k,) containing the updated priors for each
     cluster
