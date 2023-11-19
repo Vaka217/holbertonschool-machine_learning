@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import numpy as np
-initialize = __import__('4-initialize').initialize
 
 
 def maximization(X, g):
@@ -23,7 +22,6 @@ def maximization(X, g):
     n, d = X.shape
     k = g.shape[0]
 
-    pi, m, _ = initialize(X, k)
     S = np.zeros((k, d, d))
 
     sum_g = np.sum(g, axis=1)
