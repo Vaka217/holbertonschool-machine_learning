@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Expectation Maximization Module"""
 import numpy as np
 initialize = __import__('4-initialize').initialize
 expectation = __import__('6-expectation').expectation
@@ -6,7 +7,8 @@ maximization = __import__('7-maximization').maximization
 
 
 def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
-    """Performs the expectation maximization for a GMM:
+    """
+    Performs the expectation maximization for a GMM:
 
     X is a numpy.ndarray of shape (n, d) containing the data set
     k is a positive integer containing the number of clusters
@@ -32,22 +34,33 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
     data point in each cluster
     l is the log likelihood of the model
     """
+    if (not isinstance(verbose, bool) or not isinstance(tol, float) or
+            not isinstance(iterations, int) or iterations < 1):
+        return None, None, None, None, None
 
     pi, m, S = initialize(X, k)
-
-    prev_l = None
+    prev_l = []
 
     for i in range(iterations):
+        if pi is None or m is None or S is None:
+            return None, None, None, None, None
+
         g, likelihood = expectation(X, pi, m, S)
+        if i == iterations and verbose:
+                print("Log Likelihood after {} iterations: {:.5f}".format(
+                    i, likelihood))
+
+        if len(prev_l) and abs(likelihood - prev_l[-1]) <= tol:
+            if verbose:
+                print("Log Likelihood after {} iterations: {:.5f}".format(
+                    i, likelihood))
+            break
+
+        prev_l.append(likelihood)
         pi, m, S = maximization(X, g)
 
         if verbose and (i % 10 == 0 or i == iterations - 1):
-            print("Log Likelihood after {} iterations: {:.5f}".format(i, likelihood))
+            print("Log Likelihood after {} iterations: {:.5f}".format(
+                i, likelihood))
 
-        if prev_l is not None and abs(likelihood - prev_l) <= tol:
-            break
-
-        prev_l = likelihood
-
-    print("Log Likelihood after {} iterations: {:.5f}".format(i, likelihood))
     return pi, m, S, g, likelihood
