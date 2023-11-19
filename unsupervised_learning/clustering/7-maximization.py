@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
-kmeans = __import__('1-kmeans').kmeans
+initialize = __import__('4-initialize').initialize
 
 
 def maximization(X, g):
@@ -23,15 +23,17 @@ def maximization(X, g):
     n, d = X.shape
     k = g.shape[0]
 
-    m, _ = kmeans(X.T, k)
-
-    pi = np.sum(g, axis=1) / n
-
+    pi, m, _ = initialize(X, k)
     S = np.zeros((k, d, d))
+
+    sum_g = np.sum(g, axis=1)
+
+    pi = sum_g / n
+    m = np.dot(g, X) / sum_g[:, np.newaxis]
 
     for i in range(k):
         diff = X - m[i]
         weighted_diff = (g[i, :, np.newaxis] * diff).T
-        S[i] = np.dot(weighted_diff, diff) / np.sum(g[i])
+        S[i] = np.dot(weighted_diff, diff) / sum_g[i]
 
     return pi, m, S
