@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Kmeans Sklearn Module"""
-import numpy as np
 from sklearn.cluster import KMeans
 
 
