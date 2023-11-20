@@ -15,7 +15,8 @@ def regular(P):
     probabilities, or None on failure
     """
 
-    if not isinstance(P, np.ndarray) or len(P.shape) != 2:
+    if not isinstance(P, np.ndarray) or len(P.shape) != 2 or \
+            np.count_nonzero(P == 0):
         return None
 
     eigen_values, eigen_vectors = np.linalg.eig(P)
@@ -23,4 +24,5 @@ def regular(P):
     eigen_one_idxs = [round(eigen.real) for eigen in eigen_values].index(1.0)
 
     return (eigen_vectors[:, eigen_one_idxs]
-            / np.sum(eigen_vectors[:, eigen_one_idxs]))
+            / np.sum(eigen_vectors[:, eigen_one_idxs]) @
+            np.linalg.matrix_power(P, 20))
