@@ -23,9 +23,11 @@ def expectation(X, pi, m, S):
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None, None
 
-    d = X.shape[1]
+    n, d = X.shape
 
-    if not isinstance(pi, np.ndarray) or len(pi.shape) != 1:
+    if not isinstance(pi, np.ndarray) or len(pi.shape
+                                             ) != 1 or not np.allclose(
+                                                 np.sum(pi), 1):
         return None, None
 
     k = pi.shape[0]
@@ -38,10 +40,12 @@ def expectation(X, pi, m, S):
             S.shape[0] != k or S.shape[1] != d or S.shape[2] != d:
         return None, None
 
-    P = pdf(X, m, S)
+    g = np.zeros((k, n))
+    for i in range(k):
+        g[i] = pi[i] * pdf(X, m[i], S[i])
+    m = np.sum(g, axis=0)
 
-    # for x in X:
-    #     likelihood = 1/np.sqrt(2*3.14) * np.exp((-1/2)*(x**2))
+    likelihood = np.sum(np.log(m))
+    g /= np.sum(g, axis=0)
 
-    print(P)
-    return 0, np.prod(P)
+    return g, likelihood
