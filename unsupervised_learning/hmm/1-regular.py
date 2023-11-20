@@ -23,6 +23,6 @@ def regular(P):
 
     eigen_one_idxs = [round(eigen.real) for eigen in eigen_values].index(1.0)
 
-    return [list(eigen_vectors[:, eigen_one_idxs]
-                 / np.sum(eigen_vectors[:, eigen_one_idxs]) @
-                 np.linalg.matrix_power(P, 20))]
+    return (eigen_vectors[:, eigen_one_idxs]
+            / np.sum(eigen_vectors[:, eigen_one_idxs], axis=0) @
+            np.linalg.matrix_power(P, 20)).reshape(1, len(P))
