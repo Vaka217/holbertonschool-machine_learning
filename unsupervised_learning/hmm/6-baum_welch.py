@@ -116,11 +116,11 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
             for i in range(M):
                 for j in range(M):
                     xi[i, j, t] = alpha[i, t] * Transition[i, j] * \
-                        Emission[j, Observations[t + 1]]
+                        Emission[j, Observations[t + 1]] * beta[j, t + 1]
             xi[:, :, t] /= np.sum(xi[:, :, t])
             gamma[:, t] = np.sum(xi[:, :, t], axis=1)
 
-        gamma[:, T - 1] = alpha[:, T - 1] / P
+        gamma[:, T - 1] = alpha[:, T - 1] * beta[:, T - 1] / P
 
         for i in range(M):
             for k in range(N):
@@ -129,6 +129,6 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
 
         for i in range(M):
             for j in range(M):
-                Transition[i, j] = np.sum(xi[i, j, :]) / np.sum(gamma[i, :-1])
+                Transition[i, j] = np.sum(xi[i, j, :]) / np.sum(gamma[i, :])
 
     return Transition, Emission
