@@ -30,15 +30,20 @@ def viterbi(Observation, Emission, Transition, Initial):
 
     mu = np.zeros((len(Initial), len(Observation)))
     mu[:, 0] = Initial[:, 0] * Emission[:, Observation[0]]
-    path = [np.argmax(mu[:, 0])]
+
+    path = np.zeros((len(Initial), len(Observation)), dtype=int)
 
     for t in range(1, len(Observation)):
         for j in range(len(Initial)):
-            mu_j = np.max(mu[:, t - 1] * Transition[:, j]) * \
+            mu_j = mu[:, t - 1] * Transition[:, j] * \
                 Emission[j, Observation[t]]
-            mu[j, t] = mu_j
-        path.append(np.argmax(mu[:, t]))
+            mu[j, t] = np.max(mu_j)
+            path[j, t] = np.argmax(mu_j)
 
     P = np.max(mu[:, -1])
 
-    return path, P
+    best_path = [np.argmax(mu[:, -1])]
+    for t in range(len(Observation) - 1, 0, -1):
+        best_path.insert(0, path[best_path[0], t])
+
+    return best_path, P
