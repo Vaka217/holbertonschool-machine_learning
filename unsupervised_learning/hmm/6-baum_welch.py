@@ -54,9 +54,11 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
         T, = Observations.shape
         M, N = Emission.shape
 
+        if iterations > 400:
+            iterations = 400
         for i in range(iterations):
-            _, alpha = forward(Observations, Emission, Transition, Initial)
-            _, beta = backward(Observations, Emission, Transition, Initial)
+            Pf, alpha = forward(Observations, Emission, Transition, Initial)
+            Pb, beta = backward(Observations, Emission, Transition, Initial)
 
             xi = np.zeros((M, M, T - 1))
 
@@ -79,7 +81,7 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
                 Emission[:, k] = np.sum(gamma[:, Observations == k], axis=1)
             Emission = np.divide(Emission, np.sum(gamma, axis=1).reshape((
                 -1, 1)))
-            print(i)
+
         return Transition, Emission
     except Exception as exception:
         return None, None
