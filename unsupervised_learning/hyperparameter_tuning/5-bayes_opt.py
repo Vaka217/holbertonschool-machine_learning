@@ -73,7 +73,7 @@ class BayesianOptimization:
 
         Z = improv / sigma
         ei = improv * norm.cdf(Z) + sigma * norm.pdf(Z)
-        ei[sigma == 0.0] = 0.0
+        ei[sigma == 0] = 0
 
         X_next = self.X_s[np.argmax(ei)]
 
@@ -91,9 +91,10 @@ class BayesianOptimization:
         function value
         """
 
-        for i in range(iterations):
+        for _ in range(iterations):
             X_next, _ = self.acquisition()
             if X_next in self.gp.X:
+                self.gp.update(X_next, self.f(X_next))
                 break
             self.gp.update(X_next, self.f(X_next))
 
