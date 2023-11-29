@@ -93,10 +93,9 @@ class BayesianOptimization:
 
         for i in range(iterations):
             X_next, _ = self.acquisition()
-            if i > 0 and X_next == X_prev:
+            if X_next in self.gp.X:
                 break
             self.gp.update(X_next, self.f(X_next))
-            X_prev = X_next
 
         if self.minimize:
             opt = np.argmin(self.gp.Y)
