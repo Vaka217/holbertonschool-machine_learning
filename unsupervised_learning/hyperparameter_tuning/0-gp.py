@@ -44,5 +44,5 @@ class GaussianProcess:
         Returns: the covariance kernel matrix as a numpy.ndarray of
         shape (m, n)"""
 
-        return (len(X1) + len(X2)) * (np.exp(-(np.abs(X1 - X2.T) ** 2) /
-                                             (2 * self.l ** 2)))
+        numerator = -(np.abs(X1 - X2.T) ** 2)
+        return (len(X1) + len(X2)) * (np.exp(numerator / (2 * self.l ** 2)))
