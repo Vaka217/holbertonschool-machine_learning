@@ -94,7 +94,6 @@ class BayesianOptimization:
         for _ in range(iterations):
             X_next, _ = self.acquisition()
             if X_next in self.gp.X:
-                self.gp.update(X_next, self.f(X_next))
                 break
             self.gp.update(X_next, self.f(X_next))
 
