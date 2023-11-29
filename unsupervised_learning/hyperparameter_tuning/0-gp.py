@@ -45,4 +45,4 @@ class GaussianProcess:
         shape (m, n)"""
 
         numerator = -(np.abs(X1 - X2.T) ** 2)
-        return (len(X1) + len(X2)) * (np.exp(numerator / (2 * self.l ** 2)))
+        return (self.sigma_f ** 2) * (np.exp(numerator / (2 * self.l ** 2)))
