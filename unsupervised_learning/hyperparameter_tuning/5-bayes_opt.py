@@ -91,7 +91,6 @@ class BayesianOptimization:
         function value
         """
 
-        print(self.gp.X)
         for i in range(iterations):
             X_next, _ = self.acquisition()
             if i > 0 and X_next == X_prev:
