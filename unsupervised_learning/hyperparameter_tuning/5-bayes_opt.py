@@ -102,6 +102,7 @@ class BayesianOptimization:
         else:
             opt = np.argmax(self.gp.Y)
 
+        self.gp.X = self.gp.X[:-1, :]
         X_opt = self.gp.X[opt]
         Y_opt = self.gp.Y[opt]
 
