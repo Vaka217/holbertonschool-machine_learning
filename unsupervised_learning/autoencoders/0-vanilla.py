@@ -1,8 +1,27 @@
 #!/usr/bin/env python3
+"""Vanilla Autoencoder Module"""
 import tensorflow.keras as keras
 
 
 def autoencoder(input_dim, hidden_layers, latent_dim):
+    """Creates an autoencoder:
+
+    input_dims is an integer containing the dimensions of the model input
+    hidden_layers is a list containing the number of nodes for each hidden
+    layer in the encoder, respectively
+    the hidden layers should be reversed for the decoder
+    latent_dims is an integer containing the dimensions of the latent
+    space representation
+
+    Returns: encoder, decoder, auto
+    encoder is the encoder model
+    decoder is the decoder model
+    auto is the full autoencoder model
+    The autoencoder model should be compiled using adam optimization and
+    binary cross-entropy loss
+    All layers should use a relu activation except for the last layer in the
+    decoder, which should use sigmoid
+    """
     encoder_input = keras.layers.Input(shape=(input_dim,))
     encoder_output = encoder_input
     for units in hidden_layers:
@@ -26,6 +45,6 @@ def autoencoder(input_dim, hidden_layers, latent_dim):
     auto_outputs = encoder(encoder_input)
     auto_outputs = decoder(auto_outputs)
     autoencoder = keras.models.Model(encoder_input, auto_outputs)
-    autoencoder.compile(optimizer='adam', loss='mse')
+    autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
 
     return encoder, decoder, autoencoder
