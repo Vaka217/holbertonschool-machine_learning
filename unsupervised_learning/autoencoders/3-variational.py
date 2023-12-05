@@ -53,9 +53,8 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
         input_dims, activation='sigmoid')(decoder_output)
     decoder = keras.models.Model(decoder_input, decoder_output)
 
-    auto_outputs = encoder(encoder_input)
-    auto_outputs = decoder(auto_outputs)
-    autoencoder = keras.models.Model(encoder_input, decoder(latent_space))
+    autoencoder = keras.models.Model(
+        encoder_input, decoder(encoder(encoder_input)[2]))
     autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
 
     return encoder, decoder, autoencoder
