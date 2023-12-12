@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bidirectional Cell Forward Module"""
+"""Bidirectional Cell Output Module"""
 import numpy as np
 
 
@@ -21,7 +21,13 @@ class BidirectionalCell:
         The biases should be initialized as zeros
 
     public instance method def forward(self, h_prev, x_t): that performs
-    forward propagation for one time step"""
+    forward propagation for one time step
+
+    public instance method def backward(self, h_next, x_t): that calculates the
+    hidden state in the backward direction for one time step
+
+    public instance method def output(self, H): that calculates all outputs
+    for the RNN"""
 
     def __init__(self, i, h, o):
         self.Whf = np.random.normal(size=(i+h, h))
@@ -49,3 +55,39 @@ class BidirectionalCell:
         h_next = np.tanh(np.dot(h_x, self.Whf) + self.bhf)
 
         return h_next
+
+    def backward(self, h_next, x_t):
+        """Calculates the hidden state in the backward direction
+        for one time step
+                x_t is a numpy.ndarray of shape (m, i) that contains the data
+                input for the cell
+                m is the batch size for the data
+                h_next is a numpy.ndarray of shape (m, h) containing the next
+                hidden state
+
+                Returns: h_pev, the previous hidden state"""
+
+        h_x = np.concatenate((h_next, x_t), axis=1)
+
+        h_prev = np.tanh(np.dot(h_x, self.Whb) + self.bhb)
+
+        return h_prev
+
+    def output(self, H):
+        """Calculates all outputs for the RNN:
+            H is a numpy.ndarray of shape (t, m, 2 * h) that contains the
+            concatenated hidden states from both directions, excluding their
+            initialized states
+            t is the number of time steps
+            m is the batch size for the data
+            h is the dimensionality of the hidden states
+
+            Returns: Y, the outputs"""
+        Y = np.zeros((H.shape[0], H.shape[1], self.Wy.shape[1]))
+
+        for i, h in enumerate(H):
+            outputs = np.dot(h, self.Wy) + self.by
+            Y[i] = np.exp(outputs) / np.sum(np.exp(outputs), axis=1,
+                                            keepdims=True)
+
+        return Y
