@@ -29,7 +29,9 @@ def bag_of_words(sentences, vocab=None):
     for i, sentence in enumerate(sentences):
         words = sentence.split()
         for word in words:
-            embeddings[i][vocab.index(re.sub(r"\b\w{1}\b", "", re.sub(
-                r"[^a-zA-Z0-9\s]", " ", word.lower())).strip())] = 1
+            word = re.sub(r"\b\w{1}\b", "", re.sub(
+                r"[^a-zA-Z0-9\s]", " ", word.lower())).strip()
+            if word in vocab:
+                embeddings[i][vocab.index(word)] += 1
 
     return embeddings.astype(int), vocab
