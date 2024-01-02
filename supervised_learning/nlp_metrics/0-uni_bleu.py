@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Unigram BLEU Score"""
-from math import exp
+import numpy as np
 
 
 def uni_bleu(references, sentence):
@@ -12,5 +12,12 @@ def uni_bleu(references, sentence):
 
     Returns: the unigram BLEU score"""
 
-    return max([sum(match in reference for match in sentence)
-                for reference in references]) / len(sentence)
+    BP = min(1, len(sentence) / len(max(references, key=len)))
+
+    precision = max([sum(match in reference for match in sentence)
+                     for reference in references]) / len(sentence)
+
+    print(precision)
+    print(BP)
+
+    return BP * np.exp(precision)
