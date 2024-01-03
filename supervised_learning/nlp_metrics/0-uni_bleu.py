@@ -12,9 +12,9 @@ def uni_bleu(references, sentence):
 
     Returns: the unigram BLEU score"""
 
-    BP = min(1, len(sentence) / len(max(references, key=len)))
+    BP = min(1, np.exp(1 - len(min(references, key=len)) / len(sentence)))
 
     precision = max([sum(match in reference for match in sentence)
                      for reference in references]) / len(sentence)
 
-    return BP * np.exp(np.log(precision))
+    return BP * np.exp(np.mean(np.log(precision)))
