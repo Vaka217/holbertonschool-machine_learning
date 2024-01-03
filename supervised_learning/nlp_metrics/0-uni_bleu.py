@@ -17,4 +17,10 @@ def uni_bleu(references, sentence):
     precision = max([sum(match in reference for match in sentence)
                      for reference in references]) / len(sentence)
 
+    print(references)
+    print(sentence)
+    print(max([sum(match in reference for match in sentence)
+               for reference in references]))
+    print(len(sentence))
+
     return BP * np.exp(np.log(precision))
