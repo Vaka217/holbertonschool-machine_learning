@@ -18,11 +18,13 @@ def ngram_bleu(references, sentence, n):
     n_grams_ref = 0
 
     for reference in references:
+        n_grams_ref = []
         for i in range(len(sentence) - (n - 1)):
-            n_grams_ref += 1 if any(sentence[i:i + n] == reference[j:j+n]
-                                    for j in range(len(reference) - (n - 1)))\
-                else 0
-        n_grams.append(n_grams_ref)
+            if any(sentence[i:i + n] == reference[j:j+n]
+                   for j in range(len(reference) - (n - 1))) and \
+                    sentence[i:i+n] not in n_grams_ref:
+                n_grams_ref.append(sentence[i:i+n])
+        n_grams.append(len(n_grams_ref))
 
     precision = max(n_grams) / (i + 1)
 
