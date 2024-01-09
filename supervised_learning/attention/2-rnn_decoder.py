@@ -57,4 +57,4 @@ class RNNDecoder(tf.keras.layers.Layer):
         outputs, hidden = self.gru(
             embedded, initial_state=s_prev)
 
-        return self.F(hidden), hidden
+        return self.F(outputs[:, -1, :]), hidden
