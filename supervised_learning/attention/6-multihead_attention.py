@@ -18,14 +18,18 @@ class MultiHeadAttention(tf.keras.layers.Layer):
 
     def reshape_tensor(self, x, batch):
         x = tf.reshape(x, (batch, -1, self.h, self.depth))
-        return tf.transpose(x, perm=(0, 2, 1, 3))
+        return tf.transpose(x, perm=[0, 2, 1, 3])
 
     def __call__(self, Q, K, V, mask):
         batch = Q.shape[0]
 
-        V = self.reshape_tensor(self.Wv(V), batch)
-        Q = self.reshape_tensor(self.Wq(Q), batch)
-        K = self.reshape_tensor(self.Wk(K), batch)
+        V = self.Wv(V)
+        Q = self.Wq(Q)
+        K = self.Wk(K)
+
+        V = self.reshape_tensor(V, batch)
+        Q = self.reshape_tensor(Q, batch)
+        K = self.reshape_tensor(K, batch)
 
         scaled_attention, weights = sdp_attention(Q, K, V, mask)
 
