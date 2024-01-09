@@ -30,7 +30,7 @@ def sdp_attention(Q, K, V, mask=None):
     if mask:
         scores = mask * -1e9
 
-    weights = tf.keras.backend.softmax(scores)
+    weights = tf.nn.softmax(scores)
     output = tf.matmul(weights, V)
 
     return output, weights
