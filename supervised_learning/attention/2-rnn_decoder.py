@@ -32,7 +32,7 @@ class RNNDecoder(tf.keras.layers.Layer):
         self.gru = tf.keras.layers.GRU(units, return_sequences=True,
                                        return_state=True,
                                        recurrent_initializer='glorot_uniform')
-        self.F = tf.keras.layers.Dense(vocab)
+        self.F = tf.keras.layers.Dense(vocab, activation='softmax')
 
     def __call__(self, x, s_prev, hidden_states):
         """x is a tensor of shape (batch, 1) containing the previous word in
@@ -47,14 +47,15 @@ class RNNDecoder(tf.keras.layers.Layer):
         one hot vector in the target vocabulary
         s is a tensor of shape (batch, units) containing the new decoder hidden
         state"""
+        x = self.embedding(x)
+
         attention = SelfAttention(s_prev.shape[1])
-        context, weights = attention(s_prev, hidden_states)
+        context, _ = attention(s_prev, hidden_states)
 
         x = tf.cast(x, tf.float32)
-        context_x = tf.concat([context, x], axis=1)
+        context_x = tf.concat([tf.expand_dims(context, 1), x], axis=-1)
 
-        embedded = self.embedding(context_x)
-        outputs, hidden = self.gru(
-            embedded, initial_state=s_prev)
+        outputs, hidden = self.gru(context_x)
+        outputs = tf.reshape(outputs, (-1, outputs.shape[2]))
 
-        return self.F(outputs[:, -1, :]), hidden
+        return self.F(outputs), hidden
