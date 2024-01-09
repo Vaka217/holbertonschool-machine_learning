@@ -8,6 +8,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
     """"""
 
     def __init__(self, dm, h):
+        super(MultiHeadAttention, self).__init__()
         self.dm = dm
         self.h = h
         self.depth = dm // h
