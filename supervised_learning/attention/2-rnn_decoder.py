@@ -48,15 +48,16 @@ class RNNDecoder(tf.keras.layers.Layer):
         one hot vector in the target vocabulary
         s is a tensor of shape (batch, units) containing the new decoder hidden
         state"""
-        x = self.embedding(x)
-
         attention = SelfAttention(self.units)
         context, _ = attention(s_prev, hidden_states)
 
-        x = tf.cast(x, tf.float32)
+        x = self.embedding(x)
+
         context_x = tf.concat([tf.expand_dims(context, 1), x], axis=-1)
 
-        outputs, hidden = self.gru(context_x)
+        outputs, s = self.gru(context_x)
         outputs = tf.reshape(outputs, (-1, outputs.shape[2]))
 
-        return self.F(outputs), hidden
+        y = self.F(outputs)
+
+        return y, s
