@@ -54,13 +54,13 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         (..., h, seq_len_q, seq_len_v) containing the attention weights"""
         batch = tf.shape(Q)[0]
 
-        V = self.Wv(V)
         Q = self.Wq(Q)
         K = self.Wk(K)
+        V = self.Wv(V)
 
-        V = self.reshape_tensor(V, batch)
         Q = self.reshape_tensor(Q, batch)
         K = self.reshape_tensor(K, batch)
+        V = self.reshape_tensor(V, batch)
 
         scaled_attention, weights = sdp_attention(Q, K, V, mask)
 
