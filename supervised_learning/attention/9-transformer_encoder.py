@@ -46,7 +46,7 @@ class Encoder(tf.keras.layers.Layer):
         encoder output"""
         embedding = self.embedding(x)
         embedding = embedding * tf.math.sqrt(tf.cast(self.dm, tf.float32))
-        embedding = embedding * self.positional_encoding[:x.shape[1]]
+        embedding = embedding + self.positional_encoding[:x.shape[1]]
 
         output = self.dropout(embedding, training=training)
 
