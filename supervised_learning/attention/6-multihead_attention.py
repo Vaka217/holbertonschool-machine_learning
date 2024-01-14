@@ -36,8 +36,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
     def reshape_tensor(self, x, batch):
         """Split over the last axis of any given x"""
         x = tf.reshape(x, (batch, -1, self.h, self.depth))
-        x = tf.transpose(x, perm=[0, 2, 1, 3])
-        return x
+        return tf.transpose(x, perm=[0, 2, 1, 3])
 
     def __call__(self, Q, K, V, mask):
         """Q is a tensor of shape (batch, seq_len_q, dk) containing the input
