@@ -55,16 +55,20 @@ class DecoderBlock(tf.keras.layers.Layer):
 
         attention1 = self.dropout1(attention1, training=training)
 
-        addnorm_output1 = self.layernorm1(attention1 + x)
+        addnorm_output1 = self.layernorm1(x + attention1)
 
         attention2, weights2 = self.mha2(addnorm_output1, encoder_output,
                                          encoder_output, padding_mask)
 
         attention2 = self.dropout2(attention2, training=training)
 
-        addnorm_output2 = self.layernorm2(attention2 + addnorm_output1)
+        addnorm_output2 = self.layernorm2(addnorm_output1 + attention2)
 
-        dense_output = self.dropout3(addnorm_output2, training=training)
+        hidden_output = self.dense_hidden(addnorm_output2)
+
+        dense_output = self.dense_output(hidden_output)
+
+        dense_output = self.dropout3(dense_output, training=training)
 
         encoder_output = self.layernorm3(dense_output + addnorm_output2)
 
