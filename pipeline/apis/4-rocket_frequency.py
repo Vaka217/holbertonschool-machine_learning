@@ -16,12 +16,17 @@ import requests
 if __name__ == '__main__':
     rockets = dict()
     launches = requests.get(
-        'https://api.spacexdata.com/v3/launches').json()
+        'https://api.spacexdata.com/v4/launches').json()
     for launch in launches:
-        if launch['rocket']['rocket_name'] not in rockets.keys():
-            rockets[launch['rocket']['rocket_name']] = 1
+        rocket = requests.get(
+            'https://api.spacexdata.com/v4/rockets/{}'.format(
+                launch.get('rocket'))).json()
+        rocket_name = rocket.get('name')
+
+        if rockets.get(rocket_name) is None:
+            rockets[rocket_name] = 1
         else:
-            rockets[launch['rocket']['rocket_name']] += 1
+            rockets[rocket_name] += 1
 
     sorted_rockets = sorted(rockets.items(),
                             key=lambda kv: kv[1],
