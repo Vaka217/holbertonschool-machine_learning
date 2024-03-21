@@ -11,6 +11,7 @@ Your code should not be executed when the file is imported (you should use
 if __name__ == '__main__':)"""
 import sys
 import requests
+import datetime
 
 
 if __name__ == '__main__':
@@ -18,7 +19,10 @@ if __name__ == '__main__':
     if user.status_code == 404:
         print('Not found')
     elif user.status_code == 403:
-        print('Reset in {} min'.format(user.headers))
+        current_time = datetime.datetime.now()
+        time_difference = user.headers['X-Ratelimit-Reset'] - current_time
+        time_difference_minutes = time_difference.total_seconds() / 60
+        print('Reset in {} min'.format(user.headers['X-Ratelimit-Reset']))
     else:
         user = user.json()
         print(user['location'])
