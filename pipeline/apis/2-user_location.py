@@ -19,8 +19,10 @@ if __name__ == '__main__':
     if user.status_code == 404:
         print('Not found')
     elif user.status_code == 403:
+        reset_time = datetime.datetime.utcfromtimestamp(
+            user.headers['X-Ratelimit-Reset'])
         current_time = datetime.datetime.now()
-        time_difference = user.headers['X-Ratelimit-Reset'] - current_time
+        time_difference =  reset_time - current_time
         time_difference_minutes = time_difference.total_seconds() / 60
         print('Reset in {} min'.format(user.headers['X-Ratelimit-Reset']))
     else:
